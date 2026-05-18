@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>DL Workout Tracker</title>
+  <title>Football Workout Tracker</title>
 
   <style>
     body {
@@ -13,7 +13,6 @@
 
     h1 {
       text-align: center;
-      font-size: 28px;
     }
 
     .card {
@@ -21,10 +20,6 @@
       padding: 15px;
       margin-bottom: 15px;
       border-radius: 12px;
-    }
-
-    h2 {
-      font-size: 20px;
     }
 
     table {
@@ -42,94 +37,117 @@
     th {
       background: #22c55e;
       color: black;
-      font-size: 14px;
     }
 
     input {
       width: 95%;
       padding: 8px;
-      font-size: 14px;
       text-align: center;
       border-radius: 6px;
       border: none;
     }
 
-    .big-input {
-      font-size: 16px;
-      padding: 10px;
-    }
-
     button {
-      width: 45%;
+      padding: 12px;
       margin: 5px;
-      padding: 15px;
-      font-size: 18px;
+      width: 45%;
+      font-size: 16px;
       font-weight: bold;
-      border-radius: 10px;
       border: none;
+      border-radius: 10px;
       cursor: pointer;
     }
 
+    .toggle {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .toggle button {
+      width: 40%;
+    }
+
+    .active {
+      background: #22c55e;
+    }
+
+    .inactive {
+      background: #64748b;
+    }
+
+    .calc { background: #f59e0b; width: 100%; }
     .save { background: #22c55e; }
     .load { background: #3b82f6; }
-    .calc { background: #f59e0b; }
-
-    .container {
-      text-align: center;
-    }
   </style>
 </head>
 
 <body>
 
-<h1>DL Workout Tracker</h1>
+<h1>Football Workout Tracker</h1>
+
+<!-- TOGGLE -->
+<div class="toggle">
+  <button id="olBtn" class="active" onclick="setMode('OL')">Offense Line</button>
+  <button id="dlBtn" class="inactive" onclick="setMode('DL')">Defense Line</button>
+</div>
 
 <!-- MAX INPUT -->
 <div class="card">
-  <h2>Enter Your Max (1RM)</h2>
-  <input class="big-input" id="squatMax" placeholder="Squat Max">
-  <input class="big-input" id="benchMax" placeholder="Bench Max">
-  <input class="big-input" id="deadMax" placeholder="Deadlift Max">
-  <br><br>
+  <h2>Enter Your Max</h2>
+  <input id="squatMax" placeholder="Squat Max"><br><br>
+  <input id="benchMax" placeholder="Bench Max"><br><br>
+  <input id="deadMax" placeholder="Deadlift Max"><br><br>
   <button class="calc" onclick="applyWeights()">Auto Fill Weights</button>
 </div>
 
 <div id="workout"></div>
 
-<div class="container">
+<div style="text-align:center;">
   <button class="save" onclick="saveData()">Save</button>
   <button class="load" onclick="loadData()">Load</button>
 </div>
 
 <script>
-const workouts = [
-  {
-    name: "Day 1 – Lower Strength",
-    exercises: ["Squat", "Trap Bar Deadlift", "Lunges"]
-  },
-  {
-    name: "Day 2 – Upper Power",
-    exercises: ["Bench Press", "Push Press", "Row"]
-  },
-  {
-    name: "Day 3 – Lower Explosive",
-    exercises: ["Deadlift", "Box Squat", "Jumps"]
-  }
+
+let mode = "OL";
+
+const OL = [
+  {name:"Day 1 – Lower Strength", exercises:["Squat","Trap Deadlift","Lunges"]},
+  {name:"Day 2 – Upper Strength", exercises:["Bench Press","Row","Face Pull"]},
+  {name:"Day 3 – Power", exercises:["Deadlift","Box Squat","Farmer Carry"]}
+];
+
+const DL = [
+  {name:"Day 1 – Lower Burst", exercises:["Squat","Trap Deadlift","Box Jump"]},
+  {name:"Day 2 – Upper Power", exercises:["Bench Press","Push Press","Row"]},
+  {name:"Day 3 – Explosive", exercises:["Deadlift","Broad Jump","Sled Push"]}
 ];
 
 const container = document.getElementById("workout");
 
-// Create table
-function buildWorkout() {
+function setMode(newMode) {
+  mode = newMode;
+
+  document.getElementById("olBtn").className = mode==="OL" ? "active" : "inactive";
+  document.getElementById("dlBtn").className = mode==="DL" ? "active" : "inactive";
+
+  render();
+}
+
+// BUILD WORKOUT
+function render() {
+  container.innerHTML = "";
+  const workouts = mode === "OL" ? OL : DL;
+
   workouts.forEach((day, d) => {
     let html = `<div class="card"><h2>${day.name}</h2><table>`;
-    
-    html += "<tr><th>Exercise</th><th>Set1</th><th>Set2</th><th>Set3</th><th>Set4</th><th>Set5</th></tr>";
+    html += "<tr><th>Exercise</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>";
 
     day.exercises.forEach((ex, e) => {
       html += `<tr><td>${ex}</td>`;
-      for (let s = 0; s < 5; s++) {
-        html += `<td><input id="${d}-${e}-${s}"></td>`;
+      for (let s=0;s<5;s++) {
+        html += `<td><input id="${mode}-${d}-${e}-${s}"></td>`;
       }
       html += "</tr>";
     });
@@ -139,7 +157,7 @@ function buildWorkout() {
   });
 }
 
-buildWorkout();
+render();
 
 // AUTO WEIGHTS
 function applyWeights() {
@@ -147,24 +165,23 @@ function applyWeights() {
   let bench = Number(document.getElementById("benchMax").value);
   let dead = Number(document.getElementById("deadMax").value);
 
-  // percentages (week 1 style)
-  let pct = [0.65, 0.7, 0.75, 0.75, 0.8];
+  const pct = [0.65,0.7,0.75,0.75,0.8];
 
-  workouts.forEach((day, d) => {
-    day.exercises.forEach((ex, e) => {
+  const workouts = mode === "OL" ? OL : DL;
+
+  workouts.forEach((day,d)=>{
+    day.exercises.forEach((ex,e)=>{
 
       let max = 0;
-      if (ex.includes("Squat")) max = squat;
-      else if (ex.includes("Bench")) max = bench;
-      else if (ex.includes("Deadlift")) max = dead;
+      if(ex.includes("Squat")) max=squat;
+      if(ex.includes("Bench")) max=bench;
+      if(ex.includes("Dead")) max=dead;
 
-      for (let s = 0; s < 5; s++) {
-        let id = `${d}-${e}-${s}`;
-        let input = document.getElementById(id);
-
-        if (max > 0) {
-          let weight = Math.round(max * pct[s] / 5) * 5;
-          input.value = weight + " x ";
+      for(let s=0;s<5;s++){
+        let input = document.getElementById(`${mode}-${d}-${e}-${s}`);
+        if(max>0){
+          let w = Math.round(max*pct[s]/5)*5;
+          input.value = w + " x ";
         }
       }
     });
@@ -174,26 +191,27 @@ function applyWeights() {
 }
 
 // SAVE
-function saveData() {
+function saveData(){
   let inputs = document.querySelectorAll("input");
   let data = {};
-  inputs.forEach(i => data[i.id] = i.value);
-  localStorage.setItem("dlTracker", JSON.stringify(data));
+  inputs.forEach(i=>data[i.id]=i.value);
+  localStorage.setItem("fbTracker",JSON.stringify(data));
   alert("Saved ✅");
 }
 
 // LOAD
-function loadData() {
-  let data = JSON.parse(localStorage.getItem("dlTracker"));
-  if (!data) return alert("No data");
+function loadData(){
+  let data = JSON.parse(localStorage.getItem("fbTracker"));
+  if(!data) return alert("No data");
 
-  Object.keys(data).forEach(id => {
-    let el = document.getElementById(id);
-    if (el) el.value = data[id];
+  Object.keys(data).forEach(id=>{
+    let el=document.getElementById(id);
+    if(el) el.value=data[id];
   });
 
   alert("Loaded ✅");
 }
+
 </script>
 
 </body>
