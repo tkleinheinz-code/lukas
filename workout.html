@@ -4,31 +4,52 @@
   <title>Football Workout Tracker</title>
 
   <style>
-    body { font-family: Arial; background: #0f172a; color: white; margin: 10px; }
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      margin: 10px;
+    }
+
     h1 { text-align: center; }
 
     .card {
       background: #1e293b;
-      padding: 15px;
+      padding: 10px;
       margin-bottom: 15px;
       border-radius: 12px;
     }
 
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    /* ✅ KEY FIX: scroll container */
+    .table-wrap {
+      overflow-x: auto;
+      width: 100%;
+    }
+
+    table {
+      min-width: 600px;  /* forces full grid */
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
 
     th, td {
       border: 1px solid #334155;
-      padding: 10px;
+      padding: 6px;
       text-align: center;
+      font-size: 12px;
     }
 
-    th { background: #22c55e; color: black; }
+    th {
+      background: #22c55e;
+      color: black;
+    }
 
     input {
-      width: 95%;
-      padding: 8px;
+      width: 60px;
+      padding: 4px;
+      font-size: 12px;
       text-align: center;
-      border-radius: 6px;
+      border-radius: 5px;
       border: none;
     }
 
@@ -36,16 +57,9 @@
       padding: 12px;
       margin: 5px;
       width: 45%;
-      font-size: 16px;
-      font-weight: bold;
+      font-size: 14px;
       border-radius: 10px;
       border: none;
-    }
-
-    select {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
     }
 
     .toggle { display:flex; justify-content:center; }
@@ -64,35 +78,18 @@
 
 <h1>Football Workout Tracker</h1>
 
-<!-- TOGGLE -->
 <div class="toggle">
   <button id="olBtn" class="active" onclick="setMode('OL')">OL</button>
   <button id="dlBtn" class="inactive" onclick="setMode('DL')">DL</button>
 </div>
 
-<!-- MAX INPUT -->
 <div class="card">
-  <h2>Max + Week</h2>
-
   <input id="squatMax" placeholder="Squat Max"><br><br>
   <input id="benchMax" placeholder="Bench Max"><br><br>
   <input id="deadMax" placeholder="Deadlift Max"><br><br>
 
   <select id="week">
-    <option value="1">Week 1 (Base)</option>
-    <option value="2">Week 2 (Build)</option>
-    <option value="3">Week 3 (Heavy)</option>
-    <option value="4">Week 4 (Peak)</option>
-  </select>
-
-  <br><br>
-  <button class="calc" onclick="applyWeights()">Auto Fill Weights</button>
-</div>
-
-<div id="workout"></div>
-
-<div style="text-align:center;">
-  <button class="save" onclick="saveData()">Save</button>
-  <button class="load" onclick="loadData()">Load</button>
-</div>
-
+    <option value="1">Week 1</option>
+    <option value="2">Week 2</option>
+    <option value="3">Week 3</option>
+    <option value="4">Week 4</option>
