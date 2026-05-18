@@ -1,22 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  manifest.json
-<meta name="theme-color" content="#22c55e">
-  https://cdn.jsdelivr.net/npm/chart.js
   <title>Football Workout Tracker</title>
 
+  <!-- ✅ FIXED head links -->
   manifest.json
-<meta name="theme-color" content="#22c55e">
+  <meta name="theme-color" content="#22c55e">
+  https://cdn.jsdelivr.net/npm/chart.js
 
   <style>
-    body {
-      font-family: Arial;
-      background: #0f172a;
-      color: white;
-      margin: 10px;
-    }
-
+    body { font-family: Arial; background: #0f172a; color: white; margin: 10px; }
     h1 { text-align: center; }
 
     .card {
@@ -26,14 +19,10 @@
       border-radius: 12px;
     }
 
-    /* ✅ KEY FIX: scroll container */
-    .table-wrap {
-      overflow-x: auto;
-      width: 100%;
-    }
+    .table-wrap { overflow-x: auto; }
 
     table {
-      min-width: 600px;  /* forces full grid */
+      min-width: 600px;
       border-collapse: collapse;
       margin-top: 10px;
     }
@@ -45,26 +34,22 @@
       font-size: 12px;
     }
 
-    th {
-      background: #22c55e;
-      color: black;
-    }
+    th { background: #22c55e; color: black; }
 
     input {
       width: 60px;
       padding: 4px;
       font-size: 12px;
-      text-align: center;
       border-radius: 5px;
       border: none;
+      text-align: center;
     }
 
     button {
-      padding: 12px;
+      padding: 10px;
       margin: 5px;
       width: 45%;
-      font-size: 14px;
-      border-radius: 10px;
+      border-radius: 8px;
       border: none;
     }
 
@@ -74,15 +59,11 @@
     .active { background:#22c55e; }
     .inactive { background:#64748b; }
 
-    .calc { background:#f59e0b; width:100%; }
-    .save { background:#22c55e; }
-    .load { background:#3b82f6; }
-
     .pr-badge {
-  color: #22c55e;
-  font-weight: bold;
-  margin-left: 5px;
-}
+      color: #22c55e;
+      font-weight: bold;
+      margin-left: 5px;
+    }
   </style>
 </head>
 
@@ -105,86 +86,80 @@
     <option value="2">Week 2</option>
     <option value="3">Week 3</option>
     <option value="4">Week 4</option>
-  </select>
+  </select><br><br>
 
-  <br><br>
-  <button class="calc" onclick="applyWeights()">Auto Fill Weights</button>
+  <button onclick="applyWeights()">Auto Fill Weights</button>
 </div>
 
 <div id="workout"></div>
 
 <div style="text-align:center;">
-  <button class="save" onclick="saveData()">Save</button>
-  <button class="load" onclick="loadData()">Load</button>
-  <button id="installBtn">Install App</button>
+  <button onclick="saveData()">Save</button>
+  <button onclick="loadData()">Load</button>
   <button id="installBtn" style="display:none;">Install App</button>
 </div>
 
-  <div class="card">
+<div class="card">
   <h2>Strength Progress</h2>
   <canvas id="progressChart"></canvas>
 </div>
 
 <script>
 
-let mode = "OL";
+let mode="OL";
 
-const OL = [
+const OL=[
   {name:"Day 1", exercises:["Squat","Trap Deadlift","Leg Press","Lunges","Calf Raises","Plank"]},
   {name:"Day 2", exercises:["Bench","Incline DB","Row","Close Grip","Face Pull","Shrugs"]},
   {name:"Day 3", exercises:["Deadlift","Box Squat","Split Squat","Ham Curl","Goblet Squat","Core"]},
   {name:"Day 4", exercises:["Push Press","Incline Bench","Pull-ups","Dips","Lateral Raise","Triceps"]},
-  {name:"Day 5", exercises:["Farmer Carry","Sled Push","Tire Flip","Heavy Hold","Med Ball","Neck"]}
+  {name:"Day 5", exercises:["Farmer Carry","Sled Push","Tire Flip","Hold","Med Ball","Neck"]}
 ];
 
-const DL = [
+const DL=[
   {name:"Day 1", exercises:["Squat","Trap Deadlift","Box Jump","Broad Jump","Lunges","Plank"]},
   {name:"Day 2", exercises:["Bench","Push Press","Row","Face Pull","Band Punch","Shrugs"]},
-  {name:"Day 3", exercises:["10yd Sprint","20yd Sprint","Cone","Ladder","Sled Sprint","Core"]},
+  {name:"Day 3", exercises:["Sprint","Sprint","Cone","Ladder","Sled","Core"]},
   {name:"Day 4", exercises:["Deadlift","Box Squat","Split Squat","Ham Curl","Jump Squat","Core"]},
   {name:"Day 5", exercises:["Incline Bench","Pull-ups","Dips","Farmer Carry","Med Ball","Grip"]}
 ];
 
-const container=document.getElementById("workout");
-
 function render(){
+  const container=document.getElementById("workout");
   container.innerHTML="";
   const workouts = mode==="OL"?OL:DL;
+  let prFlags=JSON.parse(localStorage.getItem("prFlags"))||{};
 
   workouts.forEach((day,d)=>{
     let html=`<div class="card"><h3>${day.name}</h3><div class="table-wrap"><table>`;
+    html+=`<tr><th>Exercise</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>`;
 
-    html+="<tr><th>Exercise</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>";
+    day.exercises.forEach((ex,e)=>{
 
-let prFlags = JSON.parse(localStorage.getItem("prFlags")) || {};
+      let badge="";
+      if(ex.includes("Squat")&&prFlags.squat) badge=' <span class="pr-badge">🏆</span>';
+      if(ex.includes("Bench")&&prFlags.bench) badge=' <span class="pr-badge">🏆</span>';
+      if(ex.includes("Dead")&&prFlags.dead) badge=' <span class="pr-badge">🏆</span>';
 
-day.exercises.forEach((ex,e)=>{
+      html+=`<tr><td>${ex}${badge}</td>`;
 
-  let badge = "";
+      for(let s=0;s<5;s++){
+        html+=`<td><input id="${mode}-${d}-${e}-${s}"></td>`;
+      }
 
-  if (ex.includes("Squat") && prFlags.squat) {
-    badge = ' <span class="pr-badge">🏆 NEW PR</span>';
-  }
-  if (ex.includes("Bench") && prFlags.bench) {
-    badge = ' <span class="pr-badge">🏆 NEW PR</span>';
-  }
-  if (ex.includes("Dead") && prFlags.dead) {
-    badge = ' <span class="pr-badge">🏆 NEW PR</span>';
-  }
-
-  html += `<tr><td>${ex}${badge}</td>`;
+      html+="</tr>";
+    });
 
     html+="</table></div></div>";
     container.innerHTML+=html;
   });
 }
-
 render();
 
 function setMode(m){
   mode=m;
-  olBtn.className = m==="OL" ? "active" : "inactive";
-  dlBtn.className = m==="DL" ? "active" : "inactive";
+  olBtn.className=m==="OL"?"active":"inactive";
+  dlBtn.className=m==="DL"?"active":"inactive";
   render();
 }
 
@@ -196,7 +171,7 @@ function applyWeights(){
 
   let pct=[[.65,.7,.75,.75,.8],[.7,.75,.8,.8,.85],[.8,.85,.9,.9,.9],[.85,.9,.9,.95,.95]][week-1];
 
-  const workouts = mode==="OL"?OL:DL;
+  let workouts=mode==="OL"?OL:DL;
 
   workouts.forEach((day,d)=>{
     day.exercises.forEach((ex,e)=>{
@@ -214,145 +189,60 @@ function applyWeights(){
       }
     });
   });
-
-  alert("Weights added ✅");
 }
 
 function saveData(){
-  let data={};
-  document.querySelectorAll("input").forEach(i=>data[i.id]=i.value);
-  localStorage.setItem("tracker",JSON.stringify(data));
+  let history=JSON.parse(localStorage.getItem("history"))||[];
 
-  let history = JSON.parse(localStorage.getItem("history")) || [];
-
-  let newEntry = {
-    squat: Number(squatMax.value),
-    bench: Number(benchMax.value),
-    dead: Number(deadMax.value)
+  let newEntry={
+    date:new Date().toLocaleDateString(),
+    squat:+squatMax.value,
+    bench:+benchMax.value,
+    dead:+deadMax.value
   };
 
-  let prev = history.length > 0 ? history[history.length - 1] : null;
+  let prev=history.at(-1);
 
-  let prFlags = {
-    squat: false,
-    bench: false,
-    dead: false
-  };
-
-  if (prev) {
-    if (newEntry.squat > prev.squat) prFlags.squat = true;
-    if (newEntry.bench > prev.bench) prFlags.bench = true;
-    if (newEntry.dead > prev.dead) prFlags.dead = true;
+  let prFlags={squat:false,bench:false,dead:false};
+  if(prev){
+    if(newEntry.squat>prev.squat) prFlags.squat=true;
+    if(newEntry.bench>prev.bench) prFlags.bench=true;
+    if(newEntry.dead>prev.dead) prFlags.dead=true;
   }
 
-  // Save PR flags
-  localStorage.setItem("prFlags", JSON.stringify(prFlags));
+  localStorage.setItem("prFlags",JSON.stringify(prFlags));
+  history.push(newEntry);
+  localStorage.setItem("history",JSON.stringify(history));
 
-  history.push({ ...newEntry });
-  localStorage.setItem("history", JSON.stringify(history));
-
-  render(); // ✅ re-render to show badge
-
-  alert("Saved ✅");
+  updateChart();
+  render();
 }
 
-function loadData(){
-  let data=JSON.parse(localStorage.getItem("tracker"));
-  if(!data) return alert("No data");
-
-  Object.keys(data).forEach(id=>{
-    let el=document.getElementById(id);
-    if(el) el.value=data[id];
-  });
-
-  alert("Loaded ✅");
-}
 let chart;
 
 function updateChart(){
-  let history = JSON.parse(localStorage.getItem("history")) || [];
+  let history=JSON.parse(localStorage.getItem("history"))||[];
 
-  let labels = history.map(e => e.date);
-  let squatData = history.map(e => e.squat);
-  let benchData = history.map(e => e.bench);
-  let deadData = history.map(e => e.dead);
-
-  let ctx = document.getElementById("progressChart").getContext("2d");
+  let ctx=document.getElementById("progressChart");
 
   if(chart) chart.destroy();
 
-  chart = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          label: "Squat",
-          data: squatData,
-          borderColor: "#22c55e",
-          fill: false
-        },
-        {
-          label: "Bench",
-          data: benchData,
-          borderColor: "#3b82f6",
-          fill: false
-        },
-        {
-          label: "Deadlift",
-          data: deadData,
-          borderColor: "#ef4444",
-          fill: false
-        }
+  chart=new Chart(ctx,{
+    type:"line",
+    data:{
+      labels:history.map(x=>x.date),
+      datasets:[
+        {label:"Squat",data:history.map(x=>x.squat),borderColor:"#22c55e"},
+        {label:"Bench",data:history.map(x=>x.bench),borderColor:"#3b82f6"},
+        {label:"Deadlift",data:history.map(x=>x.dead),borderColor:"#ef4444"}
       ]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          labels: { color: "white" }
-        }
-      },
-      scales: {
-        x: {
-          ticks: { color: "white" }
-        },
-        y: {
-          ticks: { color: "white" }
-        }
-      }
     }
   });
 }
 
-// Load chart when page opens
-window.onload = updateChart;
+updateChart();
 
-  if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js")
-    .then(() => console.log("App ready ✅"));
-}
-  // ✅ Register service worker (offline support)
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js")
-    .then(() => console.log("App ready ✅"));
-}
-
-// ✅ Install button logic
-let deferredPrompt;
-
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById("installBtn").style.display = "block";
-});
-
-document.getElementById("installBtn").addEventListener("click", async () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt = null;
-  }
-});
 </script>
+
 </body>
 </html>
