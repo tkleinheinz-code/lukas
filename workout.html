@@ -199,6 +199,37 @@ function saveData(){
   let data={};
   document.querySelectorAll("input").forEach(i=>data[i.id]=i.value);
   localStorage.setItem("tracker",JSON.stringify(data));
+
+  let history = JSON.parse(localStorage.getItem("history")) || [];
+
+  let newEntry = {
+    squat: Number(squatMax.value),
+    bench: Number(benchMax.value),
+    dead: Number(deadMax.value)
+  };
+
+  let prev = history.length > 0 ? history[history.length - 1] : null;
+
+  let prFlags = {
+    squat: false,
+    bench: false,
+    dead: false
+  };
+
+  if (prev) {
+    if (newEntry.squat > prev.squat) prFlags.squat = true;
+    if (newEntry.bench > prev.bench) prFlags.bench = true;
+    if (newEntry.dead > prev.dead) prFlags.dead = true;
+  }
+
+  // Save PR flags
+  localStorage.setItem("prFlags", JSON.stringify(prFlags));
+
+  history.push({ ...newEntry });
+  localStorage.setItem("history", JSON.stringify(history));
+
+  render(); // ✅ re-render to show badge
+
   alert("Saved ✅");
 }
 
