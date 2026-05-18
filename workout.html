@@ -11,9 +11,7 @@
       margin: 10px;
     }
 
-    h1 {
-      text-align: center;
-    }
+    h1 { text-align: center; }
 
     .card {
       background: #1e293b;
@@ -53,8 +51,8 @@
       width: 45%;
       font-size: 16px;
       font-weight: bold;
-      border: none;
       border-radius: 10px;
+      border: none;
       cursor: pointer;
     }
 
@@ -64,17 +62,10 @@
       margin-bottom: 10px;
     }
 
-    .toggle button {
-      width: 40%;
-    }
+    .toggle button { width: 40%; }
 
-    .active {
-      background: #22c55e;
-    }
-
-    .inactive {
-      background: #64748b;
-    }
+    .active { background: #22c55e; }
+    .inactive { background: #64748b; }
 
     .calc { background: #f59e0b; width: 100%; }
     .save { background: #22c55e; }
@@ -86,15 +77,13 @@
 
 <h1>Football Workout Tracker</h1>
 
-<!-- TOGGLE -->
 <div class="toggle">
-  <button id="olBtn" class="active" onclick="setMode('OL')">Offense Line</button>
-  <button id="dlBtn" class="inactive" onclick="setMode('DL')">Defense Line</button>
+  <button id="olBtn" class="active" onclick="setMode('OL')">OL</button>
+  <button id="dlBtn" class="inactive" onclick="setMode('DL')">DL</button>
 </div>
 
-<!-- MAX INPUT -->
 <div class="card">
-  <h2>Enter Your Max</h2>
+  <h2>Enter Maxes</h2>
   <input id="squatMax" placeholder="Squat Max"><br><br>
   <input id="benchMax" placeholder="Bench Max"><br><br>
   <input id="deadMax" placeholder="Deadlift Max"><br><br>
@@ -112,42 +101,57 @@
 
 let mode = "OL";
 
+// ✅ OFFENSIVE LINE (Strength + Mass)
 const OL = [
-  {name:"Day 1 – Lower Strength", exercises:["Squat","Trap Deadlift","Lunges"]},
-  {name:"Day 2 – Upper Strength", exercises:["Bench Press","Row","Face Pull"]},
-  {name:"Day 3 – Power", exercises:["Deadlift","Box Squat","Farmer Carry"]}
+  {name:"Day 1 – Lower Strength",
+   exercises:["Back Squat","Trap Deadlift","Leg Press","Walking Lunges","Calf Raises","Plank"]},
+  
+  {name:"Day 2 – Upper Strength",
+   exercises:["Bench Press","Incline DB Press","Barbell Row","Close-Grip Bench","Face Pulls","Shrugs"]},
+  
+  {name:"Day 3 – Lower Power",
+   exercises:["Deadlift","Box Squat","Bulgarian Split Squat","Hamstring Curl","Goblet Squat","Core Twists"]},
+  
+  {name:"Day 4 – Upper Power",
+   exercises:["Push Press","Incline Bench","Pull-ups","Dips","Lateral Raises","Tricep Pushdowns"]},
+  
+  {name:"Day 5 – Strongman",
+   exercises:["Farmer Carry","Sled Push","Tire Flip","Heavy Holds","Med Ball Slams","Neck Work"]}
 ];
 
+// ✅ DEFENSIVE LINE (Explosive + Speed)
 const DL = [
-  {name:"Day 1 – Lower Burst", exercises:["Squat","Trap Deadlift","Box Jump"]},
-  {name:"Day 2 – Upper Power", exercises:["Bench Press","Push Press","Row"]},
-  {name:"Day 3 – Explosive", exercises:["Deadlift","Broad Jump","Sled Push"]}
+  {name:"Day 1 – Lower Burst",
+   exercises:["Back Squat","Trap Deadlift","Box Jumps","Broad Jump","Walking Lunges","Plank"]},
+  
+  {name:"Day 2 – Upper Power",
+   exercises:["Bench Press","Push Press","Barbell Row","Face Pulls","Band Punches","Shrugs"]},
+  
+  {name:"Day 3 – Speed & Agility",
+   exercises:["10-Yard Sprint","20-Yard Sprint","Cone Drill","Ladder Drill","Sled Sprint","Core"]},
+  
+  {name:"Day 4 – Lower Explosive",
+   exercises:["Deadlift","Box Squat","Split Squat","Hamstring Curl","Jump Squat","Core Twists"]},
+  
+  {name:"Day 5 – Upper Strength + Control",
+   exercises:["Incline Bench","Pull-ups","Dips","Farmer Carry","Med Ball Slams","Grip Work"]}
 ];
 
 const container = document.getElementById("workout");
 
-function setMode(newMode) {
-  mode = newMode;
-
-  document.getElementById("olBtn").className = mode==="OL" ? "active" : "inactive";
-  document.getElementById("dlBtn").className = mode==="DL" ? "active" : "inactive";
-
-  render();
-}
-
-// BUILD WORKOUT
+// BUILD UI
 function render() {
   container.innerHTML = "";
-  const workouts = mode === "OL" ? OL : DL;
+  const workouts = mode==="OL" ? OL : DL;
 
   workouts.forEach((day, d) => {
     let html = `<div class="card"><h2>${day.name}</h2><table>`;
     html += "<tr><th>Exercise</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>";
 
-    day.exercises.forEach((ex, e) => {
+    day.exercises.forEach((ex,e)=>{
       html += `<tr><td>${ex}</td>`;
-      for (let s=0;s<5;s++) {
-        html += `<td><input id="${mode}-${d}-${e}-${s}"></td>`;
+      for(let s=0;s<5;s++){
+        html += `<td><input id="${mode}-${d}-${e}-${s}" placeholder="wt x reps"></td>`;
       }
       html += "</tr>";
     });
@@ -159,29 +163,35 @@ function render() {
 
 render();
 
+// TOGGLE
+function setMode(m){
+  mode=m;
+  document.getElementById("olBtn").className = m==="OL"?"active":"inactive";
+  document.getElementById("dlBtn").className = m==="DL"?"active":"inactive";
+  render();
+}
+
 // AUTO WEIGHTS
-function applyWeights() {
-  let squat = Number(document.getElementById("squatMax").value);
-  let bench = Number(document.getElementById("benchMax").value);
-  let dead = Number(document.getElementById("deadMax").value);
+function applyWeights(){
+  let squat=Number(squatMax.value);
+  let bench=Number(benchMax.value);
+  let dead=Number(deadMax.value);
 
-  const pct = [0.65,0.7,0.75,0.75,0.8];
-
-  const workouts = mode === "OL" ? OL : DL;
+  let pct=[0.65,0.7,0.75,0.8,0.85];
+  const workouts = mode==="OL"?OL:DL;
 
   workouts.forEach((day,d)=>{
     day.exercises.forEach((ex,e)=>{
-
-      let max = 0;
+      let max=0;
       if(ex.includes("Squat")) max=squat;
       if(ex.includes("Bench")) max=bench;
       if(ex.includes("Dead")) max=dead;
 
       for(let s=0;s<5;s++){
-        let input = document.getElementById(`${mode}-${d}-${e}-${s}`);
+        let input=document.getElementById(`${mode}-${d}-${e}-${s}`);
         if(max>0){
-          let w = Math.round(max*pct[s]/5)*5;
-          input.value = w + " x ";
+          let w=Math.round(max*pct[s]/5)*5;
+          input.value=w+" x ";
         }
       }
     });
@@ -190,18 +200,16 @@ function applyWeights() {
   alert("Weights Added ✅");
 }
 
-// SAVE
+// SAVE / LOAD
 function saveData(){
-  let inputs = document.querySelectorAll("input");
-  let data = {};
-  inputs.forEach(i=>data[i.id]=i.value);
+  let data={};
+  document.querySelectorAll("input").forEach(i=>data[i.id]=i.value);
   localStorage.setItem("fbTracker",JSON.stringify(data));
   alert("Saved ✅");
 }
 
-// LOAD
 function loadData(){
-  let data = JSON.parse(localStorage.getItem("fbTracker"));
+  let data=JSON.parse(localStorage.getItem("fbTracker"));
   if(!data) return alert("No data");
 
   Object.keys(data).forEach(id=>{
@@ -213,6 +221,5 @@ function loadData(){
 }
 
 </script>
-
 </body>
 </html>
