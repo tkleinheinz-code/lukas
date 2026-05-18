@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  https://cdn.jsdelivr.net/npm/chart.js
   <title>Football Workout Tracker</title>
 
   <style>
@@ -106,6 +107,11 @@
   <button class="load" onclick="loadData()">Load</button>
 </div>
 
+  <div class="card">
+  <h2>Strength Progress</h2>
+  <canvas id="progressChart"></canvas>
+</div>
+
 <script>
 
 let mode = "OL";
@@ -207,7 +213,67 @@ function loadData(){
 
   alert("Loaded ✅");
 }
+let chart;
 
+function updateChart(){
+  let history = JSON.parse(localStorage.getItem("history")) || [];
+
+  let labels = history.map(e => e.date);
+  let squatData = history.map(e => e.squat);
+  let benchData = history.map(e => e.bench);
+  let deadData = history.map(e => e.dead);
+
+  let ctx = document.getElementById("progressChart").getContext("2d");
+
+  if(chart) chart.destroy();
+
+  chart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: "Squat",
+          data: squatData,
+          borderColor: "#22c55e",
+          fill: false
+        },
+        {
+          label: "Bench",
+          data: benchData,
+          borderColor: "#3b82f6",
+          fill: false
+        },
+        {
+          label: "Deadlift",
+          data: deadData,
+          borderColor: "#ef4444",
+          fill: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: { color: "white" }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: "white" }
+        },
+        y: {
+          ticks: { color: "white" }
+        }
+      }
+    }
+  });
+}
+
+// Load chart when page opens
+window.onload = updateChart;
+  
 </script>
 </body>
 </html>
