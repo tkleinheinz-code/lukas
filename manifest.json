@@ -9,7 +9,11 @@
     {
       "src": "images/Lukas_workout_app_image.jpg",
       "sizes": "192x192",
-      "type": "image/png"
-    }
-  ]
-}
+      "type": "image/jpg"
+    },
+  {
+    "src": "images/Lukas_workout_app_image.jpg",
+    "sizes": "512x512",
+    "type": "image/jpg"
+  }
+]
