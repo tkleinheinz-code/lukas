@@ -4,13 +4,7 @@
   <title>Football Workout Tracker</title>
 
   <style>
-    body {
-      font-family: Arial;
-      background: #0f172a;
-      color: white;
-      margin: 10px;
-    }
-
+    body { font-family: Arial; background: #0f172a; color: white; margin: 10px; }
     h1 { text-align: center; }
 
     .card {
@@ -20,11 +14,7 @@
       border-radius: 12px;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
 
     th, td {
       border: 1px solid #334155;
@@ -32,10 +22,7 @@
       text-align: center;
     }
 
-    th {
-      background: #22c55e;
-      color: black;
-    }
+    th { background: #22c55e; color: black; }
 
     input {
       width: 95%;
@@ -53,23 +40,23 @@
       font-weight: bold;
       border-radius: 10px;
       border: none;
-      cursor: pointer;
     }
 
-    .toggle {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 10px;
+    select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
     }
 
-    .toggle button { width: 40%; }
+    .toggle { display:flex; justify-content:center; }
+    .toggle button { width:40%; }
 
-    .active { background: #22c55e; }
-    .inactive { background: #64748b; }
+    .active { background:#22c55e; }
+    .inactive { background:#64748b; }
 
-    .calc { background: #f59e0b; width: 100%; }
-    .save { background: #22c55e; }
-    .load { background: #3b82f6; }
+    .calc { background:#f59e0b; width:100%; }
+    .save { background:#22c55e; }
+    .load { background:#3b82f6; }
   </style>
 </head>
 
@@ -77,16 +64,28 @@
 
 <h1>Football Workout Tracker</h1>
 
+<!-- TOGGLE -->
 <div class="toggle">
   <button id="olBtn" class="active" onclick="setMode('OL')">OL</button>
   <button id="dlBtn" class="inactive" onclick="setMode('DL')">DL</button>
 </div>
 
+<!-- MAX INPUT -->
 <div class="card">
-  <h2>Enter Maxes</h2>
+  <h2>Max + Week</h2>
+
   <input id="squatMax" placeholder="Squat Max"><br><br>
   <input id="benchMax" placeholder="Bench Max"><br><br>
   <input id="deadMax" placeholder="Deadlift Max"><br><br>
+
+  <select id="week">
+    <option value="1">Week 1 (Base)</option>
+    <option value="2">Week 2 (Build)</option>
+    <option value="3">Week 3 (Heavy)</option>
+    <option value="4">Week 4 (Peak)</option>
+  </select>
+
+  <br><br>
   <button class="calc" onclick="applyWeights()">Auto Fill Weights</button>
 </div>
 
@@ -97,129 +96,3 @@
   <button class="load" onclick="loadData()">Load</button>
 </div>
 
-<script>
-
-let mode = "OL";
-
-// ✅ OFFENSIVE LINE (Strength + Mass)
-const OL = [
-  {name:"Day 1 – Lower Strength",
-   exercises:["Back Squat","Trap Deadlift","Leg Press","Walking Lunges","Calf Raises","Plank"]},
-  
-  {name:"Day 2 – Upper Strength",
-   exercises:["Bench Press","Incline DB Press","Barbell Row","Close-Grip Bench","Face Pulls","Shrugs"]},
-  
-  {name:"Day 3 – Lower Power",
-   exercises:["Deadlift","Box Squat","Bulgarian Split Squat","Hamstring Curl","Goblet Squat","Core Twists"]},
-  
-  {name:"Day 4 – Upper Power",
-   exercises:["Push Press","Incline Bench","Pull-ups","Dips","Lateral Raises","Tricep Pushdowns"]},
-  
-  {name:"Day 5 – Strongman",
-   exercises:["Farmer Carry","Sled Push","Tire Flip","Heavy Holds","Med Ball Slams","Neck Work"]}
-];
-
-// ✅ DEFENSIVE LINE (Explosive + Speed)
-const DL = [
-  {name:"Day 1 – Lower Burst",
-   exercises:["Back Squat","Trap Deadlift","Box Jumps","Broad Jump","Walking Lunges","Plank"]},
-  
-  {name:"Day 2 – Upper Power",
-   exercises:["Bench Press","Push Press","Barbell Row","Face Pulls","Band Punches","Shrugs"]},
-  
-  {name:"Day 3 – Speed & Agility",
-   exercises:["10-Yard Sprint","20-Yard Sprint","Cone Drill","Ladder Drill","Sled Sprint","Core"]},
-  
-  {name:"Day 4 – Lower Explosive",
-   exercises:["Deadlift","Box Squat","Split Squat","Hamstring Curl","Jump Squat","Core Twists"]},
-  
-  {name:"Day 5 – Upper Strength + Control",
-   exercises:["Incline Bench","Pull-ups","Dips","Farmer Carry","Med Ball Slams","Grip Work"]}
-];
-
-const container = document.getElementById("workout");
-
-// BUILD UI
-function render() {
-  container.innerHTML = "";
-  const workouts = mode==="OL" ? OL : DL;
-
-  workouts.forEach((day, d) => {
-    let html = `<div class="card"><h2>${day.name}</h2><table>`;
-    html += "<tr><th>Exercise</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>";
-
-    day.exercises.forEach((ex,e)=>{
-      html += `<tr><td>${ex}</td>`;
-      for(let s=0;s<5;s++){
-        html += `<td><input id="${mode}-${d}-${e}-${s}" placeholder="wt x reps"></td>`;
-      }
-      html += "</tr>";
-    });
-
-    html += "</table></div>";
-    container.innerHTML += html;
-  });
-}
-
-render();
-
-// TOGGLE
-function setMode(m){
-  mode=m;
-  document.getElementById("olBtn").className = m==="OL"?"active":"inactive";
-  document.getElementById("dlBtn").className = m==="DL"?"active":"inactive";
-  render();
-}
-
-// AUTO WEIGHTS
-function applyWeights(){
-  let squat=Number(squatMax.value);
-  let bench=Number(benchMax.value);
-  let dead=Number(deadMax.value);
-
-  let pct=[0.65,0.7,0.75,0.8,0.85];
-  const workouts = mode==="OL"?OL:DL;
-
-  workouts.forEach((day,d)=>{
-    day.exercises.forEach((ex,e)=>{
-      let max=0;
-      if(ex.includes("Squat")) max=squat;
-      if(ex.includes("Bench")) max=bench;
-      if(ex.includes("Dead")) max=dead;
-
-      for(let s=0;s<5;s++){
-        let input=document.getElementById(`${mode}-${d}-${e}-${s}`);
-        if(max>0){
-          let w=Math.round(max*pct[s]/5)*5;
-          input.value=w+" x ";
-        }
-      }
-    });
-  });
-
-  alert("Weights Added ✅");
-}
-
-// SAVE / LOAD
-function saveData(){
-  let data={};
-  document.querySelectorAll("input").forEach(i=>data[i.id]=i.value);
-  localStorage.setItem("fbTracker",JSON.stringify(data));
-  alert("Saved ✅");
-}
-
-function loadData(){
-  let data=JSON.parse(localStorage.getItem("fbTracker"));
-  if(!data) return alert("No data");
-
-  Object.keys(data).forEach(id=>{
-    let el=document.getElementById(id);
-    if(el) el.value=data[id];
-  });
-
-  alert("Loaded ✅");
-}
-
-</script>
-</body>
-</html>
