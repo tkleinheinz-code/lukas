@@ -1,8 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+  manifest.json
+<meta name="theme-color" content="#22c55e">
   https://cdn.jsdelivr.net/npm/chart.js
   <title>Football Workout Tracker</title>
+
+  manifest.json
+<meta name="theme-color" content="#22c55e">
 
   <style>
     body {
@@ -111,6 +116,8 @@
 <div style="text-align:center;">
   <button class="save" onclick="saveData()">Save</button>
   <button class="load" onclick="loadData()">Load</button>
+  <button id="installBtn">Install App</button>
+  <button id="installBtn" style="display:none;">Install App</button>
 </div>
 
   <div class="card">
@@ -320,7 +327,32 @@ function updateChart(){
 
 // Load chart when page opens
 window.onload = updateChart;
-  
+
+  if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js")
+    .then(() => console.log("App ready ✅"));
+}
+  // ✅ Register service worker (offline support)
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js")
+    .then(() => console.log("App ready ✅"));
+}
+
+// ✅ Install button logic
+let deferredPrompt;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById("installBtn").style.display = "block";
+});
+
+document.getElementById("installBtn").addEventListener("click", async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt = null;
+  }
+});
 </script>
 </body>
 </html>
