@@ -7,7 +7,7 @@
   manifest.json
 
   <!-- ✅ Theme color -->
-  <meta name="theme-color" content="#22c55e">
+  <meta name="theme-color" content="#bdbd1c">
 
   <!-- ✅ FIXED: proper Chart.js script -->
   https://cdn.jsdelivr.net/npm/chart.js>
@@ -38,7 +38,7 @@
       font-size: 12px;
     }
 
-    th { background: #22c55e; color: black; }
+    th { background: #bdbd1c; color: black; }
 
     input {
       width: 60px;
@@ -60,11 +60,11 @@
     .toggle { display:flex; justify-content:center; }
     .toggle button { width:40%; }
 
-    .active { background:#22c55e; }
+    .active { background:#bdbd1c; }
     .inactive { background:#64748b; }
 
     .pr-badge {
-      color: #22c55e;
+      color: #bdbd1c;
       font-weight: bold;
       margin-left: 5px;
     }
@@ -236,7 +236,7 @@ function updateChart(){
     data:{
       labels:history.map(x=>x.date),
       datasets:[
-        {label:"Squat",data:history.map(x=>x.squat),borderColor:"#22c55e"},
+        {label:"Squat",data:history.map(x=>x.squat),borderColor:"#bdbd1c"},
         {label:"Bench",data:history.map(x=>x.bench),borderColor:"#3b82f6"},
         {label:"Deadlift",data:history.map(x=>x.dead),borderColor:"#ef4444"}
       ]
