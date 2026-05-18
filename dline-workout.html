@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lukas Kleinheinz, Defensive Lineman Workout Log</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #111;
+      color: white;
+      margin: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00ffcc;
+    }
+
+    .day {
+      background: #1c1c1c;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #444;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background: #00ffcc;
+      color: black;
+    }
+
+    input {
+      width: 85%;
+      padding: 5px;
+      background: #222;
+      color: white;
+      border: 1px solid #555;
+      text-align: center;
+    }
+
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      background: #00ffcc;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Lukas Kleinheinz, Defensive Lineman Workout Log</h1>
+
+<div id="app"></div>
+
+<div style="text-align:center;">
+  <button onclick="saveData()">Save</button>
+  <button onclick="loadData()">Load</button>
+</div>
+
+<script>
+const workouts = {
+  "Day 1 – Lower Strength + Burst": [
+    "Squat (5x5)",
+    "Trap Bar Deadlift (4x5)",
+    "Box Jumps (5x3)",
+    "Walking Lunges (3x8)",
+    "Plank"
+  ],
+
+  "Day 2 – Upper Power": [
+    "Bench Press (5x5)",
+    "Push Press (4x4)",
+    "Barbell Row (4x8)",
+    "Face Pulls (3x15)",
