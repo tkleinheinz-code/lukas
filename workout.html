@@ -72,6 +72,12 @@
     .calc { background:#f59e0b; width:100%; }
     .save { background:#22c55e; }
     .load { background:#3b82f6; }
+
+    .pr-badge {
+  color: #22c55e;
+  font-weight: bold;
+  margin-left: 5px;
+}
   </style>
 </head>
 
@@ -143,13 +149,23 @@ function render(){
 
     html+="<tr><th>Exercise</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>";
 
-    day.exercises.forEach((ex,e)=>{
-      html+=`<tr><td>${ex}</td>`;
-      for(let s=0;s<5;s++){
-        html+=`<td><input id="${mode}-${d}-${e}-${s}"></td>`;
-      }
-      html+="</tr>";
-    });
+let prFlags = JSON.parse(localStorage.getItem("prFlags")) || {};
+
+day.exercises.forEach((ex,e)=>{
+
+  let badge = "";
+
+  if (ex.includes("Squat") && prFlags.squat) {
+    badge = ' <span class="pr-badge">🏆 NEW PR</span>';
+  }
+  if (ex.includes("Bench") && prFlags.bench) {
+    badge = ' <span class="pr-badge">🏆 NEW PR</span>';
+  }
+  if (ex.includes("Dead") && prFlags.dead) {
+    badge = ' <span class="pr-badge">🏆 NEW PR</span>';
+  }
+
+  html += `<tr><td>${ex}${badge}</td>`;
 
     html+="</table></div></div>";
     container.innerHTML+=html;
