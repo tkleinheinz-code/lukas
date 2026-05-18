@@ -93,3 +93,121 @@
     <option value="2">Week 2</option>
     <option value="3">Week 3</option>
     <option value="4">Week 4</option>
+  </select>
+
+  <br><br>
+  <button class="calc" onclick="applyWeights()">Auto Fill Weights</button>
+</div>
+
+<div id="workout"></div>
+
+<div style="text-align:center;">
+  <button class="save" onclick="saveData()">Save</button>
+  <button class="load" onclick="loadData()">Load</button>
+</div>
+
+<script>
+
+let mode = "OL";
+
+const OL = [
+  {name:"Day 1", exercises:["Squat","Trap Deadlift","Leg Press","Lunges","Calf Raises","Plank"]},
+  {name:"Day 2", exercises:["Bench","Incline DB","Row","Close Grip","Face Pull","Shrugs"]},
+  {name:"Day 3", exercises:["Deadlift","Box Squat","Split Squat","Ham Curl","Goblet Squat","Core"]},
+  {name:"Day 4", exercises:["Push Press","Incline Bench","Pull-ups","Dips","Lateral Raise","Triceps"]},
+  {name:"Day 5", exercises:["Farmer Carry","Sled Push","Tire Flip","Heavy Hold","Med Ball","Neck"]}
+];
+
+const DL = [
+  {name:"Day 1", exercises:["Squat","Trap Deadlift","Box Jump","Broad Jump","Lunges","Plank"]},
+  {name:"Day 2", exercises:["Bench","Push Press","Row","Face Pull","Band Punch","Shrugs"]},
+  {name:"Day 3", exercises:["10yd Sprint","20yd Sprint","Cone","Ladder","Sled Sprint","Core"]},
+  {name:"Day 4", exercises:["Deadlift","Box Squat","Split Squat","Ham Curl","Jump Squat","Core"]},
+  {name:"Day 5", exercises:["Incline Bench","Pull-ups","Dips","Farmer Carry","Med Ball","Grip"]}
+];
+
+const container=document.getElementById("workout");
+
+function render(){
+  container.innerHTML="";
+  const workouts = mode==="OL"?OL:DL;
+
+  workouts.forEach((day,d)=>{
+    let html=`<div class="card"><h3>${day.name}</h3><div class="table-wrap"><table>`;
+
+    html+="<tr><th>Exercise</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>";
+
+    day.exercises.forEach((ex,e)=>{
+      html+=`<tr><td>${ex}</td>`;
+      for(let s=0;s<5;s++){
+        html+=`<td><input id="${mode}-${d}-${e}-${s}"></td>`;
+      }
+      html+="</tr>";
+    });
+
+    html+="</table></div></div>";
+    container.innerHTML+=html;
+  });
+}
+
+render();
+
+function setMode(m){
+  mode=m;
+  olBtn.className = m==="OL" ? "active" : "inactive";
+  dlBtn.className = m==="DL" ? "active" : "inactive";
+  render();
+}
+
+function applyWeights(){
+  let squat=+squatMax.value;
+  let bench=+benchMax.value;
+  let dead=+deadMax.value;
+  let week=+week.value;
+
+  let pct=[[.65,.7,.75,.75,.8],[.7,.75,.8,.8,.85],[.8,.85,.9,.9,.9],[.85,.9,.9,.95,.95]][week-1];
+
+  const workouts = mode==="OL"?OL:DL;
+
+  workouts.forEach((day,d)=>{
+    day.exercises.forEach((ex,e)=>{
+      let max=0;
+      if(ex.includes("Squat")) max=squat;
+      if(ex.includes("Bench")) max=bench;
+      if(ex.includes("Dead")) max=dead;
+
+      for(let s=0;s<5;s++){
+        let input=document.getElementById(`${mode}-${d}-${e}-${s}`);
+        if(max>0){
+          let w=Math.round(max*pct[s]/5)*5;
+          input.value=w+" x ";
+        }
+      }
+    });
+  });
+
+  alert("Weights added ✅");
+}
+
+function saveData(){
+  let data={};
+  document.querySelectorAll("input").forEach(i=>data[i.id]=i.value);
+  localStorage.setItem("tracker",JSON.stringify(data));
+  alert("Saved ✅");
+}
+
+function loadData(){
+  let data=JSON.parse(localStorage.getItem("tracker"));
+  if(!data) return alert("No data");
+
+  Object.keys(data).forEach(id=>{
+    let el=document.getElementById(id);
+    if(el) el.value=data[id];
+  });
+
+  alert("Loaded ✅");
+}
+
+</script>
+</body>
+</html>
