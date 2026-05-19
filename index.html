@@ -436,18 +436,6 @@ html += `
 </td>
 `;
 }
-
-<td>
-  <div class="set-box">
-    <div class="controls">
-      <button onclick="adjust('${mode}-${d}-${e}-${s}', -5)">−</button>
-      <span id="${mode}-${d}-${e}-${s}" class="weight">0</span>
-      <button onclick="adjust('${mode}-${d}-${e}-${s}', 5)">+</button>
-    </div>
-    <button class="done-btn" onclick="completeSet('${mode}-${d}-${e}-${s}')">✓</button>
-  </div>
-</td>
-`;
       }
       html += `</tr>`;
     });
@@ -495,10 +483,8 @@ function applyWeights() {
       if (ex.includes("Dead"))  max = dead;
 
       for (let s = 0; s < 5; s++) {
-        const input = document.getElementById(`${mode}-${d}-${e}-${s}`);
-        if (input && max > 0) {
-          const w = Math.round(max * pct[s] / 5) * 5;
-          input.innerText = w;
+       const weightEl = document.getElementById(`${mode}-${d}-${e}-${s}-w`);
+if (weightEl) weightEl.innerText = w;
         }
       }
     });
@@ -669,6 +655,21 @@ function completeSet(id) {
   const el = document.getElementById(id);
   el.parentElement.parentElement.style.background = "#22c55e";
   el.parentElement.parentElement.style.color = "#000";
+}
+  function adjustWeight(id, change) {
+  const el = document.getElementById(id + "-w");
+  let val = parseInt(el.innerText) || 0;
+  val += change;
+  if (val < 0) val = 0;
+  el.innerText = val;
+}
+
+function adjustReps(id, change) {
+  const el = document.getElementById(id + "-r");
+  let val = parseInt(el.innerText) || 0;
+  val += change;
+  if (val < 0) val = 0;
+  el.innerText = val;
 }
 </script>
 </body>
