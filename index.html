@@ -278,6 +278,44 @@
     }
 
     #toast.show { transform: translateX(-50%) translateY(0); }
+    .set-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.controls button {
+  width: 22px;
+  height: 22px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 4px;
+  border: none;
+  background: var(--border);
+  color: white;
+}
+
+.weight {
+  font-size: 12px;
+  width: 28px;
+  text-align: center;
+}
+
+.done-btn {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: none;
+  background: var(--gold);
+  color: black;
+}
   </style>
 </head>
 
@@ -374,7 +412,42 @@ function render() {
 
       html += `<tr><td>${ex}${badge}</td>`;
       for (let s = 0; s < 5; s++) {
-        html += `<td><input id="${mode}-${d}-${e}-${s}" placeholder="—"></td>`;
+html += `
+<td>
+  <div class="set-box">
+    
+    <div class="controls">
+      <button onclick="adjustWeight('${mode}-${d}-${e}-${s}', -5)">−</button>
+      <span id="${mode}-${d}-${e}-${s}-w" class="weight">0</span>
+      <button onclick="adjustWeight('${mode}-${d}-${e}-${s}', 5)">+</button>
+    </div>
+
+    <div style="font-size:10px; opacity:0.6;">x</div>
+
+    <div class="controls">
+      <button onclick="adjustReps('${mode}-${d}-${e}-${s}', -1)">−</button>
+      <span id="${mode}-${d}-${e}-${s}-r" class="reps">5</span>
+      <button onclick="adjustReps('${mode}-${d}-${e}-${s}', 1)">+</button>
+    </div>
+
+    <button class="done-btn" onclick="completeSet('${mode}-${d}-${e}-${s}')">✓</button>
+
+  </div>
+</td>
+`;
+}
+
+<td>
+  <div class="set-box">
+    <div class="controls">
+      <button onclick="adjust('${mode}-${d}-${e}-${s}', -5)">−</button>
+      <span id="${mode}-${d}-${e}-${s}" class="weight">0</span>
+      <button onclick="adjust('${mode}-${d}-${e}-${s}', 5)">+</button>
+    </div>
+    <button class="done-btn" onclick="completeSet('${mode}-${d}-${e}-${s}')">✓</button>
+  </div>
+</td>
+`;
       }
       html += `</tr>`;
     });
@@ -425,7 +498,7 @@ function applyWeights() {
         const input = document.getElementById(`${mode}-${d}-${e}-${s}`);
         if (input && max > 0) {
           const w = Math.round(max * pct[s] / 5) * 5;
-          input.value = `${w} lbs`;
+          input.innerText = w;
         }
       }
     });
@@ -584,7 +657,19 @@ function installApp() {
     deferredPrompt = null;
   }
 }
+function adjust(id, change) {
+  const el = document.getElementById(id);
+  let val = parseInt(el.innerText) || 0;
+  val += change;
+  if (val < 0) val = 0;
+  el.innerText = val;
+}
 
+function completeSet(id) {
+  const el = document.getElementById(id);
+  el.parentElement.parentElement.style.background = "#22c55e";
+  el.parentElement.parentElement.style.color = "#000";
+}
 </script>
 </body>
 </html>
