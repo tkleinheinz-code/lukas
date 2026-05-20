@@ -402,7 +402,7 @@ function render() {
 
   workouts.forEach((day, d) => {
     let html = `<div class="card"><h3>${day.name}</h3><div class="table-wrap"><table>`;
-    html += `<tr><th>Exercise</th><th>Set 1</th><th>Set 2</th><th>Set 3</th><th>Set 4</th><th>Set 5</th></tr>`;
+    html += `<tr><th>Exercise</th><th>Set 1</th><th>Set 2</th><th>Set 3</th></tr>`;
 
     day.exercises.forEach((ex, e) => {
       let badge = "";
@@ -411,7 +411,7 @@ function render() {
       if (ex.includes("Dead") && prFlags.dead)  badge = ' <span class="pr-badge">🏆 PR</span>';
 
       html += `<tr><td>${ex}${badge}</td>`;
-      for (let s = 0; s < 5; s++) {
+      for (let s = 0; s < 3; s++) {
 html += `
 <td>
   <div class="set-box">
@@ -465,12 +465,12 @@ function applyWeights() {
   // FIX: Renamed from 'week' to 'weekNum' to avoid collision with the <select id="weekSelect">
   const weekNum = +document.getElementById("weekSelect").value;
 
-  const pctTable = [
-    [0.65, 0.70, 0.75, 0.75, 0.80],
-    [0.70, 0.75, 0.80, 0.80, 0.85],
-    [0.80, 0.85, 0.90, 0.90, 0.90],
-    [0.85, 0.90, 0.90, 0.95, 0.95]
-  ];
+const pctTable = [
+  [0.65, 0.70, 0.75],
+  [0.70, 0.75, 0.80],
+  [0.80, 0.85, 0.90],
+  [0.85, 0.90, 0.95]
+];
 
   const pct = pctTable[weekNum - 1];
   const workouts = mode === "OL" ? OL : DL;
@@ -482,7 +482,7 @@ function applyWeights() {
       if (ex.includes("Bench")) max = bench;
       if (ex.includes("Dead"))  max = dead;
 
-      for (let s = 0; s < 5; s++) {
+      for (let s = 0; s < 3; s++) {
        const weightEl = document.getElementById(`${mode}-${d}-${e}-${s}-w`);
 if (weightEl) weightEl.innerText = w;
         }
