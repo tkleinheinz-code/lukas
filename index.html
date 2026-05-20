@@ -98,7 +98,7 @@
   }
   td { padding: 8px; border-bottom: 0.5px solid var(--color-border); vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
-  td:first-child { font-size: 13px; min-width: 120px; }
+  td:first-child { font-size: 13px; min-width: 130px; }
 
   .set-box { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 90px; }
   .controls { display: flex; align-items: center; gap: 4px; }
@@ -167,6 +167,33 @@
   .orm-input:focus { outline: none; border-color: var(--color-text-info); box-shadow: 0 0 0 2px var(--color-bg-info); }
   .orm-unit { font-size: 12px; color: var(--color-text-tertiary); }
   .orm-derived { font-size: 11px; color: var(--color-text-tertiary); margin-top: 1px; }
+
+  /* Custom (accessory) exercise rows */
+  .custom-name-input {
+    width: 100%; padding: 3px 6px; font-size: 13px;
+    border: none; border-bottom: 0.5px dashed var(--color-border-secondary);
+    background: transparent; color: var(--color-text); font-family: var(--font);
+    outline: none;
+  }
+  .custom-name-input:focus { border-bottom-color: var(--color-text-info); }
+  .custom-name-input::placeholder { color: var(--color-text-tertiary); font-style: italic; }
+  .custom-weight-input {
+    width: 60px; padding: 3px 5px; font-size: 13px; font-weight: 500; text-align: right;
+    border: 0.5px solid var(--color-border);
+    border-radius: 4px; background: var(--color-bg-secondary);
+    color: var(--color-text); font-family: var(--font); outline: none;
+  }
+  .custom-weight-input:focus { border-color: var(--color-text-info); }
+  .custom-reps-input {
+    width: 40px; padding: 3px 5px; font-size: 13px; text-align: center;
+    border: 0.5px solid var(--color-border);
+    border-radius: 4px; background: var(--color-bg-secondary);
+    color: var(--color-text); font-family: var(--font); outline: none;
+  }
+  .custom-reps-input:focus { border-color: var(--color-text-info); }
+  .custom-sets-label { font-size: 11px; color: var(--color-text-tertiary); white-space: nowrap; }
+  tr.accessory-row td { background: var(--color-bg-secondary); }
+  tr.accessory-row td:first-child { padding: 6px 8px; }
 </style>
 </head>
 <body>
@@ -200,14 +227,24 @@ const DAY_PROGRAMS = {
   ]
 };
 
-// 5/3/1 uses 90% of 1RM as the training max
 function trainingMax(ex) { return state.oneRM[ex] * 0.9; }
 
-// Weight for a given set = training max × week percentage, rounded to nearest 2.5 lb
 function calcWeight(ex, weekIdx, setIdx) {
   const tm = trainingMax(ex);
   const pct = WEEKS[weekIdx].pcts[setIdx] / 100;
   return Math.round(tm * pct / 2.5) * 2.5;
+}
+
+// accessory[mode][dayIndex][slotIndex] = { name, weight, sets, reps, done }
+function makeAccessorySlots() {
+  const modes = {};
+  for (const mode of ['OL', 'DL']) {
+    modes[mode] = DAY_PROGRAMS[mode].map(() => [
+      { name: '', weight: '', sets: 3, reps: 10, done: false },
+      { name: '', weight: '', sets: 3, reps: 10, done: false }
+    ]);
+  }
+  return modes;
 }
 
 const state = {
@@ -217,7 +254,8 @@ const state = {
   weights: {},
   reps: {},
   done: {},
-  prFlags: { Squat: false, Bench: false, Deadlift: false, 'Overhead Press': false }
+  prFlags: { Squat: false, Bench: false, Deadlift: false, 'Overhead Press': false },
+  accessory: makeAccessorySlots()
 };
 
 function getKey(mode, d, e, s) { return `${mode}-${d}-${e}-${s}`; }
@@ -251,11 +289,27 @@ function togglePR(ex) { state.prFlags[ex] = !state.prFlags[ex]; render(); }
 function updateORM(ex, val) {
   const v = parseFloat(val);
   state.oneRM[ex] = isNaN(v) ? 0 : Math.max(0, v);
-  // Clear any manual weight overrides for this exercise so they recalculate
-  Object.keys(state.weights).forEach(k => {
-    if (k.includes(ex.replace(/ /g, '_'))) delete state.weights[k];
-  });
   state.weights = {};
+  render();
+}
+
+// Accessory helpers — update without full re-render to preserve input focus
+function updateAccessoryName(mode, d, slot, val) {
+  state.accessory[mode][d][slot].name = val;
+}
+function updateAccessoryWeight(mode, d, slot, val) {
+  state.accessory[mode][d][slot].weight = val;
+}
+function updateAccessorySets(mode, d, slot, val) {
+  const v = parseInt(val);
+  state.accessory[mode][d][slot].sets = isNaN(v) ? 1 : Math.max(1, v);
+}
+function updateAccessoryReps(mode, d, slot, val) {
+  const v = parseInt(val);
+  state.accessory[mode][d][slot].reps = isNaN(v) ? 1 : Math.max(1, v);
+}
+function toggleAccessoryDone(mode, d, slot) {
+  state.accessory[mode][d][slot].done = !state.accessory[mode][d][slot].done;
   render();
 }
 
@@ -285,11 +339,8 @@ function render() {
               <input
                 class="orm-input"
                 id="orm-${ex.replace(/ /g,'_')}"
-                type="number"
-                min="0"
-                step="5"
-                value="${orm || ''}"
-                placeholder="0"
+                type="number" min="0" step="5"
+                value="${orm || ''}" placeholder="0"
                 oninput="updateORM('${ex}', this.value)"
               />
               <span class="orm-unit">lb</span>
@@ -322,6 +373,7 @@ function render() {
           <th>Set 3 (${week.reps[2]} reps)</th>
         </tr>`;
 
+    // Main 5/3/1 lifts
     day.exercises.forEach((exName, e) => {
       html += `<tr><td>${exName}${state.prFlags[exName] ? ' <span class="pr-badge">PR</span>' : ''}</td>`;
       for (let s = 0; s < 3; s++) {
@@ -351,6 +403,58 @@ function render() {
         </td>`;
       }
       html += `</tr>`;
+    });
+
+    // Accessory (custom) exercise rows
+    const slots = state.accessory[state.mode][d];
+    slots.forEach((slot, slot_i) => {
+      const isDone = slot.done;
+      html += `<tr class="accessory-row">
+        <td>
+          <input
+            class="custom-name-input"
+            type="text"
+            placeholder="Accessory exercise ${slot_i + 1}"
+            value="${slot.name.replace(/"/g, '&quot;')}"
+            oninput="updateAccessoryName('${state.mode}', ${d}, ${slot_i}, this.value)"
+          />
+        </td>
+        <td colspan="3">
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding: 2px 0;">
+            <div style="display:flex; align-items:center; gap:4px;">
+              <input
+                class="custom-weight-input"
+                type="number" min="0" step="2.5"
+                placeholder="wt"
+                value="${slot.weight}"
+                oninput="updateAccessoryWeight('${state.mode}', ${d}, ${slot_i}, this.value)"
+              />
+              <span class="custom-sets-label">lb</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:4px;">
+              <input
+                class="custom-reps-input"
+                type="number" min="1" step="1"
+                value="${slot.sets}"
+                oninput="updateAccessorySets('${state.mode}', ${d}, ${slot_i}, this.value)"
+              />
+              <span class="custom-sets-label">sets</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:4px;">
+              <input
+                class="custom-reps-input"
+                type="number" min="1" step="1"
+                value="${slot.reps}"
+                oninput="updateAccessoryReps('${state.mode}', ${d}, ${slot_i}, this.value)"
+              />
+              <span class="custom-sets-label">reps</span>
+            </div>
+            <button class="done-btn ${isDone ? 'completed' : ''}" onclick="toggleAccessoryDone('${state.mode}', ${d}, ${slot_i})">
+              ${isDone ? '<i class="ti ti-check"></i> done' : 'mark done'}
+            </button>
+          </div>
+        </td>
+      </tr>`;
     });
 
     html += `</table></div></div>`;
