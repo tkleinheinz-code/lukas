@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/tabler-icons.min.css" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
- 
+
   :root {
     --color-bg: #ffffff;
     --color-bg-secondary: #f5f5f3;
@@ -29,7 +29,7 @@
     --radius-lg: 12px;
     --font: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
- 
+
   @media (prefers-color-scheme: dark) {
     :root {
       --color-bg: #1c1c1a;
@@ -47,7 +47,7 @@
       --color-border-secondary: rgba(255,255,255,0.25);
     }
   }
- 
+
   body {
     font-family: var(--font);
     background: var(--color-bg-secondary);
@@ -55,12 +55,12 @@
     min-height: 100vh;
     padding: 1.5rem 1rem;
   }
- 
+
   .container { max-width: 860px; margin: 0 auto; }
- 
+
   .header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 1.5rem; }
   .header h1 { font-size: 20px; font-weight: 500; flex: 1; }
- 
+
   .tabs { display: flex; gap: 6px; }
   .tab {
     padding: 6px 14px; font-size: 13px;
@@ -70,7 +70,7 @@
     transition: all 0.15s; font-family: var(--font);
   }
   .tab.active { background: var(--color-bg-secondary); color: var(--color-text); border-color: var(--color-border-secondary); font-weight: 500; }
- 
+
   .week-tabs { display: flex; gap: 6px; margin-bottom: 1.5rem; flex-wrap: wrap; }
   .wtab {
     padding: 5px 12px; font-size: 12px;
@@ -79,7 +79,7 @@
     font-family: var(--font);
   }
   .wtab.active { background: var(--color-bg-info); color: var(--color-text-info); border-color: var(--color-border-info); font-weight: 500; }
- 
+
   .card {
     background: var(--color-bg);
     border: 0.5px solid var(--color-border);
@@ -88,7 +88,7 @@
     margin-bottom: 1rem;
   }
   .card h3 { font-size: 15px; font-weight: 500; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
- 
+
   .table-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; }
   th {
@@ -99,7 +99,7 @@
   td { padding: 8px; border-bottom: 0.5px solid var(--color-border); vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
   td:first-child { font-size: 13px; min-width: 120px; }
- 
+
   .set-box { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 90px; }
   .controls { display: flex; align-items: center; gap: 4px; }
   .controls button {
@@ -115,7 +115,7 @@
   .reps { font-size: 12px; min-width: 20px; text-align: center; color: var(--color-text-secondary); }
   .x-label { font-size: 10px; color: var(--color-text-tertiary); }
   .note { font-size: 11px; color: var(--color-text-tertiary); }
- 
+
   .done-btn {
     margin-top: 2px; padding: 3px 10px; font-size: 11px;
     border: 0.5px solid var(--color-border-secondary);
@@ -124,13 +124,13 @@
     transition: all 0.15s; font-family: var(--font);
   }
   .done-btn.completed { background: var(--color-bg-success); color: var(--color-text-success); border-color: var(--color-border-success); }
- 
+
   .pr-badge {
     font-size: 10px; background: var(--color-bg-warning);
     color: var(--color-text-warning); border-radius: 4px;
     padding: 1px 5px; font-weight: 500;
   }
- 
+
   .pr-panel { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
   .pr-toggle {
     display: flex; align-items: center; gap: 6px;
@@ -142,8 +142,31 @@
   }
   .pr-toggle.on { background: var(--color-bg-warning); color: var(--color-text-warning); border-color: var(--color-border-warning); }
   .pr-toggle i { font-size: 15px; }
- 
+
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+  .orm-card {
+    background: var(--color-bg);
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  .orm-card h2 { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 1rem; }
+  .orm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+  .orm-field { display: flex; flex-direction: column; gap: 5px; }
+  .orm-field label { font-size: 12px; color: var(--color-text-secondary); font-weight: 500; }
+  .orm-row { display: flex; align-items: center; gap: 6px; }
+  .orm-input {
+    width: 80px; padding: 5px 8px; font-size: 14px; font-weight: 500;
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--radius-md); background: var(--color-bg);
+    color: var(--color-text); font-family: var(--font);
+    text-align: right;
+  }
+  .orm-input:focus { outline: none; border-color: var(--color-text-info); box-shadow: 0 0 0 2px var(--color-bg-info); }
+  .orm-unit { font-size: 12px; color: var(--color-text-tertiary); }
+  .orm-derived { font-size: 11px; color: var(--color-text-tertiary); margin-top: 1px; }
 </style>
 </head>
 <body>
@@ -151,97 +174,68 @@
   <h2 class="sr-only">5/3/1 workout tracker — adjust weights and reps per set, mark sets complete</h2>
   <div id="root"></div>
 </div>
- 
+
 <script>
-const DATA = {
-  exercises: ['Squat','Deadlift','Bench','Overhead Press'],
-  weeks: [
-    {
-      label: 'Week 1', reps: [5, 5, '5+'],
-      sets: [[65,75,85],[65,75,85],[65,75,85],[65,75,85]],
-      weights: [
-        [175.5, 202.5, 229.5],
-        [160.875, 185.625, 210.375],
-        [131.625, 151.875, 172.125],
-        [0, 0, 0]
-      ]
-    },
-    {
-      label: 'Week 2', reps: [5, 5, '5+'],
-      sets: [[70,80,90],[70,80,90],[70,80,90],[70,80,90]],
-      weights: [
-        [196, 224, 252],
-        [180.25, 206, 231.75],
-        [145.25, 166, 186.75],
-        [3.5, 4, 4.5]
-      ]
-    },
-    {
-      label: 'Week 3', reps: [5, 5, '5+'],
-      sets: [[75,85,95],[75,85,95],[75,85,95],[75,85,95]],
-      weights: [
-        [217.5, 246.5, 275.5],
-        [200.625, 227.375, 254.125],
-        [159.375, 180.625, 201.875],
-        [7.5, 8.5, 9.5]
-      ]
-    },
-    {
-      label: 'Week 4 Deload', reps: [5, 5, 5],
-      sets: [[40,50,60],[40,50,60],[40,50,60],[40,50,60]],
-      weights: [
-        [120, 150, 180],
-        [111, 138.75, 166.5],
-        [87, 108.75, 130.5],
-        [6, 7.5, 9]
-      ]
-    }
-  ]
-};
- 
+const EXERCISES = ['Squat', 'Deadlift', 'Bench', 'Overhead Press'];
+
+const WEEKS = [
+  { label: 'Week 1',        reps: [5, 5, '5+'], pcts: [65, 75, 85] },
+  { label: 'Week 2',        reps: [5, 5, '5+'], pcts: [70, 80, 90] },
+  { label: 'Week 3',        reps: [5, 5, '5+'], pcts: [75, 85, 95] },
+  { label: 'Week 4 Deload', reps: [5, 5,   5 ], pcts: [40, 50, 60] }
+];
+
 const DAY_PROGRAMS = {
   OL: [
     { name: 'Day 1 — Overhead Press + Squat', exercises: ['Overhead Press', 'Squat'] },
-    { name: 'Day 2 — Deadlift + Bench', exercises: ['Deadlift', 'Bench'] },
-    { name: 'Day 3 — Bench + Deadlift', exercises: ['Bench', 'Deadlift'] },
+    { name: 'Day 2 — Deadlift + Bench',       exercises: ['Deadlift', 'Bench'] },
+    { name: 'Day 3 — Bench + Deadlift',       exercises: ['Bench', 'Deadlift'] },
     { name: 'Day 4 — Squat + Overhead Press', exercises: ['Squat', 'Overhead Press'] }
   ],
   DL: [
-    { name: 'Day 1 — Squat', exercises: ['Squat'] },
-    { name: 'Day 2 — Bench', exercises: ['Bench'] },
-    { name: 'Day 3 — Deadlift', exercises: ['Deadlift'] },
-    { name: 'Day 4 — Overhead Press', exercises: ['Overhead Press'] }
+    { name: 'Day 1 — Squat',           exercises: ['Squat'] },
+    { name: 'Day 2 — Bench',           exercises: ['Bench'] },
+    { name: 'Day 3 — Deadlift',        exercises: ['Deadlift'] },
+    { name: 'Day 4 — Overhead Press',  exercises: ['Overhead Press'] }
   ]
 };
- 
+
+// 5/3/1 uses 90% of 1RM as the training max
+function trainingMax(ex) { return state.oneRM[ex] * 0.9; }
+
+// Weight for a given set = training max × week percentage, rounded to nearest 2.5 lb
+function calcWeight(ex, weekIdx, setIdx) {
+  const tm = trainingMax(ex);
+  const pct = WEEKS[weekIdx].pcts[setIdx] / 100;
+  return Math.round(tm * pct / 2.5) * 2.5;
+}
+
 const state = {
   mode: 'OL',
   week: 0,
+  oneRM: { Squat: 300, Deadlift: 275, Bench: 225, 'Overhead Press': 0 },
   weights: {},
   reps: {},
   done: {},
   prFlags: { Squat: false, Bench: false, Deadlift: false, 'Overhead Press': false }
 };
- 
+
 function getKey(mode, d, e, s) { return `${mode}-${d}-${e}-${s}`; }
- 
+
 function getWeight(mode, d, e, s) {
   const k = getKey(mode, d, e, s);
   if (state.weights[k] !== undefined) return state.weights[k];
   const exName = DAY_PROGRAMS[mode][d].exercises[e];
-  const idx = DATA.exercises.indexOf(exName);
-  if (idx < 0) return 0;
-  const w = DATA.weeks[state.week].weights[idx][s];
-  return Math.round(w * 2) / 2;
+  return calcWeight(exName, state.week, s);
 }
- 
+
 function getReps(mode, d, e, s) {
   const k = getKey(mode, d, e, s);
   if (state.reps[k] !== undefined) return state.reps[k];
-  const r = DATA.weeks[state.week].reps[s];
+  const r = WEEKS[state.week].reps[s];
   return typeof r === 'string' ? 5 : r;
 }
- 
+
 function setWeight(key, val) { state.weights[key] = Math.max(0, val); render(); }
 function adjustReps(key, delta) {
   const el = document.getElementById(key + '-r');
@@ -250,15 +244,25 @@ function adjustReps(key, delta) {
   render();
 }
 function completeSet(key) { state.done[key] = !state.done[key]; render(); }
- 
 function switchMode(m) { state.mode = m; state.weights = {}; state.reps = {}; state.done = {}; render(); }
 function switchWeek(w) { state.week = w; state.weights = {}; state.reps = {}; state.done = {}; render(); }
 function togglePR(ex) { state.prFlags[ex] = !state.prFlags[ex]; render(); }
- 
+
+function updateORM(ex, val) {
+  const v = parseFloat(val);
+  state.oneRM[ex] = isNaN(v) ? 0 : Math.max(0, v);
+  // Clear any manual weight overrides for this exercise so they recalculate
+  Object.keys(state.weights).forEach(k => {
+    if (k.includes(ex.replace(/ /g, '_'))) delete state.weights[k];
+  });
+  state.weights = {};
+  render();
+}
+
 function render() {
   const days = DAY_PROGRAMS[state.mode];
-  const week = DATA.weeks[state.week];
- 
+  const week = WEEKS[state.week];
+
   let html = `
     <div class="header">
       <h1>5/3/1 workout tracker</h1>
@@ -267,8 +271,37 @@ function render() {
         <button class="tab ${state.mode === 'DL' ? 'active' : ''}" onclick="switchMode('DL')">Single lift</button>
       </div>
     </div>
+
+    <div class="orm-card">
+      <h2>1 rep max</h2>
+      <div class="orm-grid">
+        ${EXERCISES.map(ex => {
+          const orm = state.oneRM[ex];
+          const tm = Math.round(orm * 0.9 * 10) / 10;
+          return `
+          <div class="orm-field">
+            <label for="orm-${ex.replace(/ /g,'_')}">${ex}</label>
+            <div class="orm-row">
+              <input
+                class="orm-input"
+                id="orm-${ex.replace(/ /g,'_')}"
+                type="number"
+                min="0"
+                step="5"
+                value="${orm || ''}"
+                placeholder="0"
+                oninput="updateORM('${ex}', this.value)"
+              />
+              <span class="orm-unit">lb</span>
+            </div>
+            <div class="orm-derived">Training max: ${orm ? tm + ' lb' : '—'}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+
     <div class="week-tabs">
-      ${DATA.weeks.map((w, i) => `<button class="wtab ${state.week === i ? 'active' : ''}" onclick="switchWeek(${i})">${w.label}</button>`).join('')}
+      ${WEEKS.map((w, i) => `<button class="wtab ${state.week === i ? 'active' : ''}" onclick="switchWeek(${i})">${w.label}</button>`).join('')}
     </div>
     <div class="pr-panel">
       ${Object.keys(state.prFlags).map(ex => `
@@ -277,7 +310,7 @@ function render() {
         </button>`).join('')}
     </div>
   `;
- 
+
   days.forEach((day, d) => {
     const hasPR = day.exercises.some(ex => state.prFlags[ex]);
     html += `<div class="card"><h3>${day.name}${hasPR ? ' <span class="pr-badge">PR day</span>' : ''}</h3>
@@ -288,23 +321,22 @@ function render() {
           <th>Set 2 (${week.reps[1]} reps)</th>
           <th>Set 3 (${week.reps[2]} reps)</th>
         </tr>`;
- 
+
     day.exercises.forEach((exName, e) => {
-      const idx = DATA.exercises.indexOf(exName);
       html += `<tr><td>${exName}${state.prFlags[exName] ? ' <span class="pr-badge">PR</span>' : ''}</td>`;
       for (let s = 0; s < 3; s++) {
         const key = getKey(state.mode, d, e, s);
         const w = getWeight(state.mode, d, e, s);
         const r = getReps(state.mode, d, e, s);
-        const pct = idx >= 0 ? week.sets[idx][s] : '—';
+        const pct = week.pcts[s];
         const isDone = !!state.done[key];
         html += `<td>
           <div class="set-box">
             <div class="note">${pct}%</div>
             <div class="controls">
-              <button onclick="setWeight('${key}', ${w - 5})">−</button>
+              <button onclick="setWeight('${key}', ${w - 2.5})">−</button>
               <span id="${key}-w" class="weight">${w} lb</span>
-              <button onclick="setWeight('${key}', ${w + 5})">+</button>
+              <button onclick="setWeight('${key}', ${w + 2.5})">+</button>
             </div>
             <span class="x-label">×</span>
             <div class="controls">
@@ -320,13 +352,13 @@ function render() {
       }
       html += `</tr>`;
     });
- 
+
     html += `</table></div></div>`;
   });
- 
+
   document.getElementById('root').innerHTML = html;
 }
- 
+
 render();
 </script>
 </body>
