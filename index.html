@@ -14,17 +14,20 @@
     --color-bg-info: #e6f1fb;
     --color-bg-success: #eaf3de;
     --color-bg-warning: #faeeda;
+    --color-bg-danger: #fdeaea;
     --color-text: #1a1a18;
     --color-text-secondary: #5f5e5a;
     --color-text-tertiary: #888780;
     --color-text-info: #185fa5;
     --color-text-success: #3b6d11;
     --color-text-warning: #854f0b;
-    --color-border: rgba(0,0,0,0.15);
-    --color-border-secondary: rgba(0,0,0,0.25);
+    --color-text-danger: #a51818;
+    --color-border: rgba(0,0,0,0.12);
+    --color-border-secondary: rgba(0,0,0,0.22);
     --color-border-info: rgba(24,95,165,0.35);
     --color-border-success: rgba(59,109,17,0.35);
     --color-border-warning: rgba(133,79,11,0.35);
+    --color-border-danger: rgba(165,24,24,0.35);
     --radius-md: 8px;
     --radius-lg: 12px;
     --font: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -37,14 +40,16 @@
       --color-bg-info: #042c53;
       --color-bg-success: #173404;
       --color-bg-warning: #412402;
+      --color-bg-danger: #3d0a0a;
       --color-text: #f0efe8;
       --color-text-secondary: #b4b2a9;
       --color-text-tertiary: #888780;
       --color-text-info: #85b7eb;
       --color-text-success: #97c459;
       --color-text-warning: #ef9f27;
-      --color-border: rgba(255,255,255,0.15);
-      --color-border-secondary: rgba(255,255,255,0.25);
+      --color-text-danger: #eb8585;
+      --color-border: rgba(255,255,255,0.12);
+      --color-border-secondary: rgba(255,255,255,0.22);
     }
   }
 
@@ -56,10 +61,12 @@
     padding: 1.5rem 1rem;
   }
 
-  .container { max-width: 860px; margin: 0 auto; }
+  .container { max-width: 900px; margin: 0 auto; }
 
-  .header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 1.5rem; }
-  .header h1 { font-size: 20px; font-weight: 500; flex: 1; }
+  /* ── Header ── */
+  .header { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 1.5rem; }
+  .header h1 { font-size: 20px; font-weight: 500; flex: 1; min-width: 160px; }
+  .header-actions { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 
   .tabs { display: flex; gap: 6px; }
   .tab {
@@ -69,9 +76,53 @@
     background: var(--color-bg); color: var(--color-text-secondary);
     transition: all 0.15s; font-family: var(--font);
   }
-  .tab.active { background: var(--color-bg-secondary); color: var(--color-text); border-color: var(--color-border-secondary); font-weight: 500; }
+  .tab.active { background: var(--color-bg-secondary); color: var(--color-text); font-weight: 500; }
 
-  .week-tabs { display: flex; gap: 6px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .action-btn {
+    display: flex; align-items: center; gap: 5px;
+    padding: 6px 12px; font-size: 13px;
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--radius-md); cursor: pointer;
+    background: var(--color-bg); color: var(--color-text-secondary);
+    transition: all 0.15s; font-family: var(--font); white-space: nowrap;
+  }
+  .action-btn i { font-size: 15px; }
+  .action-btn:hover { background: var(--color-bg-secondary); color: var(--color-text); }
+  .action-btn:active { transform: scale(0.97); }
+  .action-btn.save  { color: var(--color-text-success); border-color: var(--color-border-success); background: var(--color-bg-success); }
+  .action-btn.reset { color: var(--color-text-warning); border-color: var(--color-border-warning); }
+  .action-btn.reset:hover { background: var(--color-bg-warning); }
+  .action-btn.install { color: var(--color-text-info); border-color: var(--color-border-info); }
+  .action-btn.install:hover { background: var(--color-bg-info); }
+  .action-btn.export { color: var(--color-text-info); border-color: var(--color-border-info); }
+  .action-btn.export:hover { background: var(--color-bg-info); }
+
+  /* ── Cycle banner ── */
+  .cycle-banner {
+    background: var(--color-bg);
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 0.9rem 1.25rem;
+    margin-bottom: 1.25rem;
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  }
+  .cycle-label { font-size: 13px; color: var(--color-text-secondary); }
+  .cycle-num { font-size: 20px; font-weight: 600; color: var(--color-text); }
+  .cycle-complete-btn {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 16px; font-size: 13px; font-weight: 500;
+    border: 0.5px solid var(--color-border-success);
+    border-radius: var(--radius-md); cursor: pointer;
+    background: var(--color-bg-success); color: var(--color-text-success);
+    font-family: var(--font); transition: all 0.15s;
+  }
+  .cycle-complete-btn:hover { filter: brightness(0.93); }
+  .cycle-complete-btn i { font-size: 16px; }
+  .cycle-complete-btn:disabled { opacity: 0.4; cursor: default; }
+
+  /* ── Week / PR tabs ── */
+  .week-tabs { display: flex; gap: 6px; margin-bottom: 1.25rem; flex-wrap: wrap; }
   .wtab {
     padding: 5px 12px; font-size: 12px;
     border: 0.5px solid var(--color-border); border-radius: var(--radius-md);
@@ -80,6 +131,18 @@
   }
   .wtab.active { background: var(--color-bg-info); color: var(--color-text-info); border-color: var(--color-border-info); font-weight: 500; }
 
+  .pr-panel { display: flex; gap: 8px; margin-bottom: 1.25rem; flex-wrap: wrap; }
+  .pr-toggle {
+    display: flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border: 0.5px solid var(--color-border);
+    border-radius: var(--radius-md); cursor: pointer;
+    background: var(--color-bg); font-size: 12px;
+    color: var(--color-text-secondary); user-select: none; font-family: var(--font);
+  }
+  .pr-toggle.on { background: var(--color-bg-warning); color: var(--color-text-warning); border-color: var(--color-border-warning); }
+  .pr-toggle i { font-size: 15px; }
+
+  /* ── Cards ── */
   .card {
     background: var(--color-bg);
     border: 0.5px solid var(--color-border);
@@ -89,6 +152,30 @@
   }
   .card h3 { font-size: 15px; font-weight: 500; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
+  /* ── 1RM card ── */
+  .orm-card {
+    background: var(--color-bg);
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .orm-card h2 { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 1rem; }
+  .orm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+  .orm-field { display: flex; flex-direction: column; gap: 5px; }
+  .orm-field label { font-size: 12px; color: var(--color-text-secondary); font-weight: 500; }
+  .orm-row { display: flex; align-items: center; gap: 6px; }
+  .orm-input {
+    width: 80px; padding: 5px 8px; font-size: 14px; font-weight: 500;
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--radius-md); background: var(--color-bg);
+    color: var(--color-text); font-family: var(--font); text-align: right;
+  }
+  .orm-input:focus { outline: none; border-color: var(--color-text-info); box-shadow: 0 0 0 2px var(--color-bg-info); }
+  .orm-unit { font-size: 12px; color: var(--color-text-tertiary); }
+  .orm-derived { font-size: 11px; color: var(--color-text-tertiary); margin-top: 1px; }
+
+  /* ── Table ── */
   .table-wrap { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; }
   th {
@@ -107,8 +194,7 @@
     border: 0.5px solid var(--color-border-secondary);
     border-radius: 4px; background: var(--color-bg-secondary);
     color: var(--color-text); cursor: pointer; font-size: 15px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--font);
+    display: flex; align-items: center; justify-content: center; font-family: var(--font);
   }
   .controls button:active { transform: scale(0.95); }
   .weight { font-size: 14px; font-weight: 500; min-width: 52px; text-align: center; }
@@ -127,56 +213,27 @@
 
   .pr-badge {
     font-size: 10px; background: var(--color-bg-warning);
-    color: var(--color-text-warning); border-radius: 4px;
-    padding: 1px 5px; font-weight: 500;
+    color: var(--color-text-warning); border-radius: 4px; padding: 1px 5px; font-weight: 500;
   }
 
-  .pr-panel { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
-  .pr-toggle {
-    display: flex; align-items: center; gap: 6px;
-    padding: 6px 12px; border: 0.5px solid var(--color-border);
-    border-radius: var(--radius-md); cursor: pointer;
-    background: var(--color-bg); font-size: 12px;
-    color: var(--color-text-secondary); user-select: none;
-    font-family: var(--font);
-  }
-  .pr-toggle.on { background: var(--color-bg-warning); color: var(--color-text-warning); border-color: var(--color-border-warning); }
-  .pr-toggle i { font-size: 15px; }
+  /* ── Accessory rows ── */
+  tr.accessory-row td { background: var(--color-bg-secondary); }
+  tr.accessory-row td:first-child { padding: 6px 8px; }
 
-  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
-
-  .orm-card {
-    background: var(--color-bg);
-    border: 0.5px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: 1rem 1.25rem;
-    margin-bottom: 1.5rem;
-  }
-  .orm-card h2 { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 1rem; }
-  .orm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
-  .orm-field { display: flex; flex-direction: column; gap: 5px; }
-  .orm-field label { font-size: 12px; color: var(--color-text-secondary); font-weight: 500; }
-  .orm-row { display: flex; align-items: center; gap: 6px; }
-  .orm-input {
-    width: 80px; padding: 5px 8px; font-size: 14px; font-weight: 500;
-    border: 0.5px solid var(--color-border-secondary);
-    border-radius: var(--radius-md); background: var(--color-bg);
+  .accessory-picker-wrap { position: relative; width: 100%; }
+  .accessory-select {
+    width: 100%; padding: 4px 28px 4px 7px; font-size: 13px;
+    border: 0.5px dashed var(--color-border-secondary);
+    border-radius: 5px; background: var(--color-bg-secondary);
     color: var(--color-text); font-family: var(--font);
-    text-align: right;
+    appearance: none; cursor: pointer; outline: none;
   }
-  .orm-input:focus { outline: none; border-color: var(--color-text-info); box-shadow: 0 0 0 2px var(--color-bg-info); }
-  .orm-unit { font-size: 12px; color: var(--color-text-tertiary); }
-  .orm-derived { font-size: 11px; color: var(--color-text-tertiary); margin-top: 1px; }
+  .accessory-select:focus { border-color: var(--color-text-info); border-style: solid; }
+  .accessory-select-arrow {
+    position: absolute; right: 7px; top: 50%; transform: translateY(-50%);
+    pointer-events: none; color: var(--color-text-tertiary); font-size: 14px;
+  }
 
-  /* Custom (accessory) exercise rows */
-  .custom-name-input {
-    width: 100%; padding: 3px 6px; font-size: 13px;
-    border: none; border-bottom: 0.5px dashed var(--color-border-secondary);
-    background: transparent; color: var(--color-text); font-family: var(--font);
-    outline: none;
-  }
-  .custom-name-input:focus { border-bottom-color: var(--color-text-info); }
-  .custom-name-input::placeholder { color: var(--color-text-tertiary); font-style: italic; }
   .custom-weight-input {
     width: 60px; padding: 3px 5px; font-size: 13px; font-weight: 500; text-align: right;
     border: 0.5px solid var(--color-border);
@@ -192,23 +249,56 @@
   }
   .custom-reps-input:focus { border-color: var(--color-text-info); }
   .custom-sets-label { font-size: 11px; color: var(--color-text-tertiary); white-space: nowrap; }
-  tr.accessory-row td { background: var(--color-bg-secondary); }
-  tr.accessory-row td:first-child { padding: 6px 8px; }
+
+  /* ── Progress chart card ── */
+  .chart-card {
+    background: var(--color-bg);
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .chart-card h2 { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 1rem; }
+  .chart-legend { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 0.75rem; }
+  .chart-legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--color-text-secondary); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .chart-wrap { width: 100%; overflow-x: auto; }
+  .chart-wrap svg { display: block; min-width: 300px; }
+  .chart-empty { font-size: 13px; color: var(--color-text-tertiary); padding: 1rem 0; }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+    background: var(--color-text); color: var(--color-bg);
+    padding: 8px 18px; border-radius: var(--radius-md);
+    font-size: 13px; font-family: var(--font);
+    opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    z-index: 9999; white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
 </style>
 </head>
 <body>
 <div class="container">
-  <h2 class="sr-only">5/3/1 workout tracker — adjust weights and reps per set, mark sets complete</h2>
+  <h2 class="sr-only">5/3/1 workout tracker</h2>
   <div id="root"></div>
 </div>
+<div class="toast" id="toast"></div>
 
 <script>
+// ── Constants ──────────────────────────────────────────────────────────────────
+
 const EXERCISES = ['Squat', 'Deadlift', 'Bench', 'Overhead Press'];
+
+// Which exercises get +10 lb per cycle (lower body), rest get +5 lb
+const LOWER_BODY = ['Squat', 'Deadlift'];
 
 const WEEKS = [
   { label: 'Week 1',        reps: [5, 5, '5+'], pcts: [65, 75, 85] },
-  { label: 'Week 2',        reps: [5, 5, '5+'], pcts: [70, 80, 90] },
-  { label: 'Week 3',        reps: [5, 5, '5+'], pcts: [75, 85, 95] },
+  { label: 'Week 2',        reps: [3, 3, '3+'], pcts: [70, 80, 90] },
+  { label: 'Week 3',        reps: [5, 3, '1+'], pcts: [75, 85, 95] },
   { label: 'Week 4 Deload', reps: [5, 5,   5 ], pcts: [40, 50, 60] }
 ];
 
@@ -220,22 +310,30 @@ const DAY_PROGRAMS = {
     { name: 'Day 4 — Squat + Overhead Press', exercises: ['Squat', 'Overhead Press'] }
   ],
   DL: [
-    { name: 'Day 1 — Squat',           exercises: ['Squat'] },
-    { name: 'Day 2 — Bench',           exercises: ['Bench'] },
-    { name: 'Day 3 — Deadlift',        exercises: ['Deadlift'] },
-    { name: 'Day 4 — Overhead Press',  exercises: ['Overhead Press'] }
+    { name: 'Day 1 — Squat',          exercises: ['Squat'] },
+    { name: 'Day 2 — Bench',          exercises: ['Bench'] },
+    { name: 'Day 3 — Deadlift',       exercises: ['Deadlift'] },
+    { name: 'Day 4 — Overhead Press', exercises: ['Overhead Press'] }
   ]
 };
 
-function trainingMax(ex) { return state.oneRM[ex] * 0.9; }
+// Accessory exercise library, grouped by category
+const ACCESSORY_LIBRARY = {
+  'Push': ['Dumbbell Press', 'Incline DB Press', 'Cable Fly', 'Tricep Pushdown', 'Skull Crushers', 'Dips', 'Lateral Raises', 'Face Pulls'],
+  'Pull': ['Chin-Ups', 'Pull-Ups', 'Barbell Row', 'DB Row', 'Cable Row', 'Lat Pulldown', 'Hammer Curls', 'Barbell Curl'],
+  'Legs': ['Leg Press', 'Romanian Deadlift', 'Leg Curl', 'Leg Extension', 'Walking Lunges', 'Bulgarian Split Squat', 'Calf Raises', 'Hip Thrust'],
+  'Core': ['Hanging Leg Raise', 'Ab Wheel', 'Plank', 'Cable Crunch', 'Side Bend', 'Pallof Press'],
+};
 
-function calcWeight(ex, weekIdx, setIdx) {
-  const tm = trainingMax(ex);
-  const pct = WEEKS[weekIdx].pcts[setIdx] / 100;
-  return Math.round(tm * pct / 2.5) * 2.5;
-}
+const CHART_COLORS = {
+  'Squat':          '#3b82f6',
+  'Deadlift':       '#ef4444',
+  'Bench':          '#10b981',
+  'Overhead Press': '#f59e0b',
+};
 
-// accessory[mode][dayIndex][slotIndex] = { name, weight, sets, reps, done }
+// ── State ──────────────────────────────────────────────────────────────────────
+
 function makeAccessorySlots() {
   const modes = {};
   for (const mode of ['OL', 'DL']) {
@@ -247,37 +345,246 @@ function makeAccessorySlots() {
   return modes;
 }
 
-const state = {
+const DEFAULT_CORE = {
   mode: 'OL',
   week: 0,
-  oneRM: { Squat: 300, Deadlift: 275, Bench: 225, 'Overhead Press': 0 },
+  cycle: 1,
+  oneRM: { Squat: 300, Deadlift: 275, Bench: 225, 'Overhead Press': 135 },
   weights: {},
   reps: {},
   done: {},
   prFlags: { Squat: false, Bench: false, Deadlift: false, 'Overhead Press': false },
+  // cycleHistory: array of { cycle, date, trainingMaxes: { Squat, Deadlift, Bench, 'Overhead Press' } }
+  cycleHistory: [],
+};
+
+const state = {
+  ...JSON.parse(JSON.stringify(DEFAULT_CORE)),
   accessory: makeAccessorySlots()
 };
+
+// ── Persistence ────────────────────────────────────────────────────────────────
+
+function saveState() {
+  try {
+    localStorage.setItem('lukas531_v2', JSON.stringify({
+      mode: state.mode, week: state.week, cycle: state.cycle,
+      oneRM: state.oneRM, weights: state.weights, reps: state.reps,
+      done: state.done, prFlags: state.prFlags,
+      cycleHistory: state.cycleHistory,
+      accessory: state.accessory
+    }));
+    showToast('Saved ✓');
+  } catch(e) { showToast('Save failed'); }
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('lukas531_v2');
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    Object.assign(state, s);
+    if (!state.accessory) state.accessory = makeAccessorySlots();
+    if (!state.cycleHistory) state.cycleHistory = [];
+    if (!state.cycle) state.cycle = 1;
+  } catch(e) {}
+}
+
+function resetState() {
+  if (!confirm('Reset all data to defaults? This cannot be undone.')) return;
+  localStorage.removeItem('lukas531_v2');
+  Object.assign(state, JSON.parse(JSON.stringify(DEFAULT_CORE)));
+  state.accessory = makeAccessorySlots();
+  render();
+  showToast('Reset to defaults');
+}
+
+// ── Cycle management ───────────────────────────────────────────────────────────
+
+function completeCycle() {
+  if (state.week !== 3) { showToast('Complete Week 4 (Deload) first'); return; }
+  if (!confirm(`Complete Cycle ${state.cycle}?\n\nTraining maxes will increase:\n• Squat & Deadlift: +10 lb\n• Bench & Overhead Press: +5 lb`)) return;
+
+  // Record current TMs in history before incrementing
+  const tmSnapshot = {};
+  EXERCISES.forEach(ex => { tmSnapshot[ex] = Math.round(state.oneRM[ex] * 0.9 * 10) / 10; });
+  state.cycleHistory.push({
+    cycle: state.cycle,
+    date: new Date().toLocaleDateString(),
+    trainingMaxes: { ...tmSnapshot }
+  });
+
+  // Increment 1RMs so TM goes up by target amount
+  // TM = 1RM * 0.9  →  new1RM = (TM + increment) / 0.9
+  EXERCISES.forEach(ex => {
+    const increment = LOWER_BODY.includes(ex) ? 10 : 5;
+    const currentTM = state.oneRM[ex] * 0.9;
+    const newTM = currentTM + increment;
+    state.oneRM[ex] = Math.round((newTM / 0.9) * 10) / 10;
+  });
+
+  state.cycle += 1;
+  state.week = 0;
+  state.weights = {};
+  state.reps = {};
+  state.done = {};
+
+  saveState();
+  render();
+  showToast(`Cycle ${state.cycle - 1} complete! Starting Cycle ${state.cycle} 🎉`);
+}
+
+// ── CSV Export ─────────────────────────────────────────────────────────────────
+
+function exportCSV() {
+  const rows = [['Cycle', 'Date', 'Exercise', 'Training Max (lb)']];
+  state.cycleHistory.forEach(entry => {
+    EXERCISES.forEach(ex => {
+      rows.push([entry.cycle, entry.date, ex, entry.trainingMaxes[ex] ?? '']);
+    });
+  });
+  // Also add current cycle's TMs as "current"
+  EXERCISES.forEach(ex => {
+    rows.push([`${state.cycle} (current)`, new Date().toLocaleDateString(), ex, Math.round(state.oneRM[ex] * 0.9 * 10) / 10]);
+  });
+
+  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'lukas-531-history.csv';
+  a.click(); URL.revokeObjectURL(url);
+  showToast('CSV exported');
+}
+
+// ── Chart ──────────────────────────────────────────────────────────────────────
+
+function buildChart() {
+  const history = state.cycleHistory;
+  if (history.length === 0) {
+    return `<p class="chart-empty">Complete your first cycle to see progression here.</p>`;
+  }
+
+  // Include current cycle as a point too
+  const allPoints = [...history];
+  const currentTMs = {};
+  EXERCISES.forEach(ex => { currentTMs[ex] = Math.round(state.oneRM[ex] * 0.9 * 10) / 10; });
+  allPoints.push({ cycle: state.cycle, date: 'Now', trainingMaxes: currentTMs });
+
+  const cycles = allPoints.map(p => p.cycle);
+  const minCycle = Math.min(...cycles);
+  const maxCycle = Math.max(...cycles);
+
+  // Gather all TM values for Y scale
+  let allVals = [];
+  allPoints.forEach(p => EXERCISES.forEach(ex => allVals.push(p.trainingMaxes[ex] || 0)));
+  const minVal = Math.max(0, Math.min(...allVals) - 15);
+  const maxVal = Math.max(...allVals) + 15;
+
+  const W = 700, H = 200, PL = 48, PR = 16, PT = 16, PB = 28;
+  const chartW = W - PL - PR;
+  const chartH = H - PT - PB;
+
+  const xScale = maxCycle === minCycle ? (c => PL + chartW / 2) : (c => PL + ((c - minCycle) / (maxCycle - minCycle)) * chartW);
+  const yScale = v => PT + chartH - ((v - minVal) / (maxVal - minVal)) * chartH;
+
+  // Y axis labels
+  const yTicks = 4;
+  let yTicksHtml = '';
+  for (let i = 0; i <= yTicks; i++) {
+    const v = minVal + (i / yTicks) * (maxVal - minVal);
+    const y = yScale(v);
+    yTicksHtml += `<line x1="${PL}" x2="${W - PR}" y1="${y}" y2="${y}" stroke="currentColor" stroke-opacity="0.08" stroke-width="1"/>
+    <text x="${PL - 5}" y="${y + 4}" text-anchor="end" font-size="10" fill="currentColor" opacity="0.45">${Math.round(v)}</text>`;
+  }
+
+  // X axis labels (cycle numbers)
+  let xTicksHtml = '';
+  allPoints.forEach(p => {
+    const x = xScale(p.cycle);
+    xTicksHtml += `<text x="${x}" y="${H - 4}" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.45">C${p.cycle}</text>`;
+  });
+
+  // Lines + dots per exercise
+  let linesHtml = '';
+  EXERCISES.forEach(ex => {
+    const pts = allPoints.map(p => ({ x: xScale(p.cycle), y: yScale(p.trainingMaxes[ex] || 0) }));
+    if (pts.length < 2) return;
+    const d = pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+    linesHtml += `<path d="${d}" fill="none" stroke="${CHART_COLORS[ex]}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"/>`;
+    pts.forEach((p, i) => {
+      const isLast = i === pts.length - 1;
+      linesHtml += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${isLast ? 4 : 3}" fill="${CHART_COLORS[ex]}" opacity="${isLast ? 1 : 0.7}"/>`;
+    });
+  });
+
+  const legendHtml = EXERCISES.map(ex =>
+    `<div class="chart-legend-item"><div class="legend-dot" style="background:${CHART_COLORS[ex]}"></div>${ex}</div>`
+  ).join('');
+
+  return `
+    <div class="chart-legend">${legendHtml}</div>
+    <div class="chart-wrap">
+      <svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg">
+        ${yTicksHtml}
+        ${xTicksHtml}
+        ${linesHtml}
+      </svg>
+    </div>`;
+}
+
+// ── Install (PWA) ──────────────────────────────────────────────────────────────
+
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault(); deferredInstallPrompt = e; render();
+});
+function installApp() {
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    deferredInstallPrompt.userChoice.then(() => { deferredInstallPrompt = null; render(); });
+  } else { showToast('Open in a browser to install'); }
+}
+
+// ── Toast ──────────────────────────────────────────────────────────────────────
+
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ── Weight / rep helpers ───────────────────────────────────────────────────────
+
+function trainingMax(ex) { return state.oneRM[ex] * 0.9; }
+
+function calcWeight(ex, weekIdx, setIdx) {
+  const tm = trainingMax(ex);
+  const pct = WEEKS[weekIdx].pcts[setIdx] / 100;
+  return Math.round(tm * pct / 2.5) * 2.5;
+}
 
 function getKey(mode, d, e, s) { return `${mode}-${d}-${e}-${s}`; }
 
 function getWeight(mode, d, e, s) {
   const k = getKey(mode, d, e, s);
   if (state.weights[k] !== undefined) return state.weights[k];
-  const exName = DAY_PROGRAMS[mode][d].exercises[e];
-  return calcWeight(exName, state.week, s);
+  return calcWeight(DAY_PROGRAMS[mode][d].exercises[e], state.week, s);
 }
 
 function getReps(mode, d, e, s) {
   const k = getKey(mode, d, e, s);
   if (state.reps[k] !== undefined) return state.reps[k];
   const r = WEEKS[state.week].reps[s];
-  return typeof r === 'string' ? 5 : r;
+  return typeof r === 'string' ? (r === '5+' ? 5 : r === '3+' ? 3 : 1) : r;
 }
 
 function setWeight(key, val) { state.weights[key] = Math.max(0, val); render(); }
 function adjustReps(key, delta) {
   const el = document.getElementById(key + '-r');
-  const cur = el ? (parseInt(el.textContent) || 5) : 5;
+  const cur = el ? (parseInt(el.textContent) || 1) : 1;
   state.reps[key] = Math.max(1, cur + delta);
   render();
 }
@@ -293,13 +600,10 @@ function updateORM(ex, val) {
   render();
 }
 
-// Accessory helpers — update without full re-render to preserve input focus
-function updateAccessoryName(mode, d, slot, val) {
-  state.accessory[mode][d][slot].name = val;
-}
-function updateAccessoryWeight(mode, d, slot, val) {
-  state.accessory[mode][d][slot].weight = val;
-}
+// ── Accessory helpers ──────────────────────────────────────────────────────────
+
+function updateAccessoryName(mode, d, slot, val) { state.accessory[mode][d][slot].name = val; }
+function updateAccessoryWeight(mode, d, slot, val) { state.accessory[mode][d][slot].weight = val; }
 function updateAccessorySets(mode, d, slot, val) {
   const v = parseInt(val);
   state.accessory[mode][d][slot].sets = isNaN(v) ? 1 : Math.max(1, v);
@@ -313,19 +617,67 @@ function toggleAccessoryDone(mode, d, slot) {
   render();
 }
 
+// Build the <select> options for the accessory library
+function buildAccessoryOptions(currentName) {
+  let opts = `<option value="">— pick exercise —</option>`;
+  for (const [group, exercises] of Object.entries(ACCESSORY_LIBRARY)) {
+    opts += `<optgroup label="${group}">`;
+    exercises.forEach(ex => {
+      opts += `<option value="${ex}" ${currentName === ex ? 'selected' : ''}>${ex}</option>`;
+    });
+    opts += `</optgroup>`;
+  }
+  // If current name is a custom value not in the library, add it so it stays selected
+  const allLib = Object.values(ACCESSORY_LIBRARY).flat();
+  if (currentName && !allLib.includes(currentName)) {
+    opts += `<option value="${currentName}" selected>${currentName}</option>`;
+  }
+  return opts;
+}
+
+// ── Render ─────────────────────────────────────────────────────────────────────
+
 function render() {
   const days = DAY_PROGRAMS[state.mode];
   const week = WEEKS[state.week];
+  const isDeloadWeek = state.week === 3;
 
   let html = `
     <div class="header">
       <h1>Lukas 5/3/1 workout tracker</h1>
-      <div class="tabs">
-        <button class="tab ${state.mode === 'OL' ? 'active' : ''}" onclick="switchMode('OL')">4-day</button>
-        <button class="tab ${state.mode === 'DL' ? 'active' : ''}" onclick="switchMode('DL')">Single lift</button>
+      <div class="header-actions">
+        <div class="tabs">
+          <button class="tab ${state.mode === 'OL' ? 'active' : ''}" onclick="switchMode('OL')">4-day</button>
+          <button class="tab ${state.mode === 'DL' ? 'active' : ''}" onclick="switchMode('DL')">Single lift</button>
+        </div>
+        <button class="action-btn save" onclick="saveState()"><i class="ti ti-device-floppy"></i> Save</button>
+        <button class="action-btn export" onclick="exportCSV()"><i class="ti ti-table-export"></i> Export CSV</button>
+        <button class="action-btn reset" onclick="resetState()"><i class="ti ti-refresh"></i> Reset</button>
+        <button class="action-btn install" onclick="installApp()"><i class="ti ti-download"></i> Install</button>
       </div>
     </div>
 
+    <!-- Cycle banner -->
+    <div class="cycle-banner">
+      <div>
+        <div class="cycle-label">Current cycle</div>
+        <div class="cycle-num">Cycle ${state.cycle}</div>
+      </div>
+      <div style="font-size:12px; color:var(--color-text-tertiary)">
+        ${state.cycleHistory.length > 0 ? `${state.cycleHistory.length} cycle${state.cycleHistory.length > 1 ? 's' : ''} completed` : 'No cycles completed yet'}
+      </div>
+      <button class="cycle-complete-btn" onclick="completeCycle()" ${!isDeloadWeek ? 'disabled' : ''} title="${!isDeloadWeek ? 'Switch to Week 4 Deload to complete cycle' : 'Finish this cycle and increment training maxes'}">
+        <i class="ti ti-trophy"></i> Complete Cycle ${state.cycle}
+      </button>
+    </div>
+
+    <!-- Progress chart -->
+    <div class="chart-card">
+      <h2>Training max progression</h2>
+      ${buildChart()}
+    </div>
+
+    <!-- 1RM inputs -->
     <div class="orm-card">
       <h2>1 rep max</h2>
       <div class="orm-grid">
@@ -336,13 +688,9 @@ function render() {
           <div class="orm-field">
             <label for="orm-${ex.replace(/ /g,'_')}">${ex}</label>
             <div class="orm-row">
-              <input
-                class="orm-input"
-                id="orm-${ex.replace(/ /g,'_')}"
-                type="number" min="0" step="5"
-                value="${orm || ''}" placeholder="0"
-                oninput="updateORM('${ex}', this.value)"
-              />
+              <input class="orm-input" id="orm-${ex.replace(/ /g,'_')}"
+                type="number" min="0" step="5" value="${orm || ''}" placeholder="0"
+                oninput="updateORM('${ex}', this.value)" />
               <span class="orm-unit">lb</span>
             </div>
             <div class="orm-derived">Training max: ${orm ? tm + ' lb' : '—'}</div>
@@ -351,9 +699,12 @@ function render() {
       </div>
     </div>
 
+    <!-- Week tabs -->
     <div class="week-tabs">
       ${WEEKS.map((w, i) => `<button class="wtab ${state.week === i ? 'active' : ''}" onclick="switchWeek(${i})">${w.label}</button>`).join('')}
     </div>
+
+    <!-- PR toggles -->
     <div class="pr-panel">
       ${Object.keys(state.prFlags).map(ex => `
         <button class="pr-toggle ${state.prFlags[ex] ? 'on' : ''}" onclick="togglePR('${ex}')">
@@ -362,9 +713,11 @@ function render() {
     </div>
   `;
 
+  // Day cards
   days.forEach((day, d) => {
     const hasPR = day.exercises.some(ex => state.prFlags[ex]);
-    html += `<div class="card"><h3>${day.name}${hasPR ? ' <span class="pr-badge">PR day</span>' : ''}</h3>
+    html += `<div class="card">
+      <h3>${day.name}${hasPR ? ' <span class="pr-badge">PR day</span>' : ''}</h3>
       <div class="table-wrap"><table>
         <tr>
           <th>Exercise</th>
@@ -373,7 +726,7 @@ function render() {
           <th>Set 3 (${week.reps[2]} reps)</th>
         </tr>`;
 
-    // Main 5/3/1 lifts
+    // Main lifts
     day.exercises.forEach((exName, e) => {
       html += `<tr><td>${exName}${state.prFlags[exName] ? ' <span class="pr-badge">PR</span>' : ''}</td>`;
       for (let s = 0; s < 3; s++) {
@@ -405,51 +758,42 @@ function render() {
       html += `</tr>`;
     });
 
-    // Accessory (custom) exercise rows
+    // Accessory rows
     const slots = state.accessory[state.mode][d];
-    slots.forEach((slot, slot_i) => {
+    slots.forEach((slot, si) => {
       const isDone = slot.done;
       html += `<tr class="accessory-row">
         <td>
-          <input
-            class="custom-name-input"
-            type="text"
-            placeholder="Accessory exercise ${slot_i + 1}"
-            value="${slot.name.replace(/"/g, '&quot;')}"
-            oninput="updateAccessoryName('${state.mode}', ${d}, ${slot_i}, this.value)"
-          />
+          <div class="accessory-picker-wrap">
+            <select class="accessory-select"
+              onchange="updateAccessoryName('${state.mode}', ${d}, ${si}, this.value)"
+            >
+              ${buildAccessoryOptions(slot.name)}
+            </select>
+            <i class="ti ti-chevron-down accessory-select-arrow"></i>
+          </div>
         </td>
         <td colspan="3">
-          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding: 2px 0;">
+          <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:2px 0;">
             <div style="display:flex; align-items:center; gap:4px;">
-              <input
-                class="custom-weight-input"
-                type="number" min="0" step="2.5"
-                placeholder="wt"
-                value="${slot.weight}"
-                oninput="updateAccessoryWeight('${state.mode}', ${d}, ${slot_i}, this.value)"
-              />
+              <input class="custom-weight-input" type="number" min="0" step="2.5"
+                placeholder="wt" value="${slot.weight}"
+                oninput="updateAccessoryWeight('${state.mode}', ${d}, ${si}, this.value)" />
               <span class="custom-sets-label">lb</span>
             </div>
             <div style="display:flex; align-items:center; gap:4px;">
-              <input
-                class="custom-reps-input"
-                type="number" min="1" step="1"
+              <input class="custom-reps-input" type="number" min="1" step="1"
                 value="${slot.sets}"
-                oninput="updateAccessorySets('${state.mode}', ${d}, ${slot_i}, this.value)"
-              />
+                oninput="updateAccessorySets('${state.mode}', ${d}, ${si}, this.value)" />
               <span class="custom-sets-label">sets</span>
             </div>
             <div style="display:flex; align-items:center; gap:4px;">
-              <input
-                class="custom-reps-input"
-                type="number" min="1" step="1"
+              <input class="custom-reps-input" type="number" min="1" step="1"
                 value="${slot.reps}"
-                oninput="updateAccessoryReps('${state.mode}', ${d}, ${slot_i}, this.value)"
-              />
+                oninput="updateAccessoryReps('${state.mode}', ${d}, ${si}, this.value)" />
               <span class="custom-sets-label">reps</span>
             </div>
-            <button class="done-btn ${isDone ? 'completed' : ''}" onclick="toggleAccessoryDone('${state.mode}', ${d}, ${slot_i})">
+            <button class="done-btn ${isDone ? 'completed' : ''}" onclick="toggleAccessoryDone('${state.mode}', ${d}, ${si})">
               ${isDone ? '<i class="ti ti-check"></i> done' : 'mark done'}
             </button>
           </div>
@@ -463,6 +807,9 @@ function render() {
   document.getElementById('root').innerHTML = html;
 }
 
+// ── Boot ───────────────────────────────────────────────────────────────────────
+
+loadState();
 render();
 </script>
 </body>
