@@ -658,14 +658,39 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     if (el) el.classList.add('active');
   }
 
-  // ── Note: window.storage is provided by the Claude artifact runtime.
-  // ── When running standalone, replace with a localStorage shim, e.g.:
-  // ── window.storage = {
-  // ──   get: (k) => Promise.resolve(localStorage.getItem(k) ? {value: localStorage.getItem(k)} : null),
-  // ──   set: (k, v) => { localStorage.setItem(k, v); return Promise.resolve({value: v}); }
-  // ── };
+<!-- Firebase SDKs — paste just before your closing </body> tag -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+  const firebaseConfig = {
+    // ← paste your config here
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  // A fixed player ID — change this to the player's name/number
+  // e.g. "player_22" so multiple players can each have their own data
+  const PLAYER_ID = "player_1";
+
+  // Drop-in replacement for window.storage
+  window.storage = {
+    get: async (key) => {
+      const snap = await getDoc(doc(db, "players", PLAYER_ID, "data", key));
+      return snap.exists() ? { value: snap.data().value } : null;
+    },
+    set: async (key, value) => {
+      await setDoc(doc(db, "players", PLAYER_ID, "data", key), { value });
+      return { value };
+    }
+  };
+
+  // Now that storage is ready, boot the app
   loadAll();
+</script>
+
 </script>
 </body>
 </html>
